@@ -9,6 +9,7 @@ from slowapi.util import get_remote_address
 
 from app import db
 from app.routes.health import router as health_router
+from app.static_analysis.semgrep_runner import run_semgrep
 
 
 limiter = Limiter(key_func=get_remote_address)
@@ -36,6 +37,7 @@ app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 @app.on_event("startup")
 async def startup_event() -> None:
     db.init_db()
+    run_semgrep("value = 1\n", "python")
 
 
 @app.exception_handler(Exception)
