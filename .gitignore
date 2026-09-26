@@ -4,6 +4,6 @@ __pycache__/
 .env 
 node_modules/ 
 dist/ 
-data/*.duckdb 
+**/data/*.duckdb
 .pytest_cache/ 
 *.egg-info/
