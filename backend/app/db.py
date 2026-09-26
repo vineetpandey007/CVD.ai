@@ -9,9 +9,11 @@ app logic itself is small. This is a deliberate design choice for the current sc
 from __future__ import annotations
 
 import os
+from collections.abc import Generator
 from pathlib import Path
 
 from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
 from app.models import Base
 
@@ -28,10 +30,19 @@ def get_db_path() -> Path:
     return target
 
 
-def init_db() -> None:
-    db_path = get_db_path()
-    db_path.parent.mkdir(parents=True, exist_ok=True)
+_db_path = get_db_path()
+_db_path.parent.mkdir(parents=True, exist_ok=True)
+engine = create_engine(f"duckdb:///{_db_path.as_posix()}", future=True)
+SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
-    engine = create_engine(f"duckdb:///{db_path.as_posix()}", future=True)
+
+def init_db() -> None:
     Base.metadata.create_all(bind=engine)
-    engine.dispose()
+
+
+def get_db() -> Generator[Session, None, None]:
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()

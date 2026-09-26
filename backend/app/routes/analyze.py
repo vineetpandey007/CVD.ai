@@ -1,8 +1,11 @@
 import logging
+from typing import Annotated
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, Depends, Request
+from sqlalchemy.orm import Session
 
 from app import models
+from app.db import get_db
 from app.inference.bug_detector import predict
 from app.main import limiter
 from app.schemas import AnalyzeRequest, AnalyzeResponse, Finding
@@ -16,7 +19,11 @@ logger = logging.getLogger(__name__)
 
 @router.post("/api/analyze", response_model=AnalyzeResponse)
 @limiter.limit("10/minute")
-async def analyze(request: Request, payload: AnalyzeRequest) -> AnalyzeResponse:
+async def analyze(
+    request: Request,
+    payload: AnalyzeRequest,
+    session: Annotated[Session, Depends(get_db)],
+) -> AnalyzeResponse:
     try:
         model_result = predict(payload.code)
     except Exception:
@@ -41,6 +48,7 @@ async def analyze(request: Request, payload: AnalyzeRequest) -> AnalyzeResponse:
     vulnerable = bool(static_findings)
     overall_confidence = 0.99 if vulnerable else 0.0
     record = models.create_scan(
+        session,
         payload.language,
         vulnerable,
         overall_confidence,

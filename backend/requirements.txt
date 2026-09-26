@@ -38,7 +38,6 @@ slowapi>=0.1.9
 # --- Logging & config ---
 python-dotenv>=1.0.0
 structlog>=23.2.0
-pytz>=2024.1
 
 # --- Testing ---
 pytest>=7.4.0
