@@ -68,6 +68,10 @@ def create_scan(
     return record
 
 
+def get_scan(session: Session, scan_id: str) -> ScanRecord | None:
+    return session.get(ScanRecord, scan_id)
+
+
 def cwe_breakdown(session: Session) -> list[dict[str, Any]]:
     rows = session.execute(
         select(

@@ -20,3 +20,10 @@ testing. Bandit and Semgrep are therefore the primary reliable signals in the
 current build. The model currently contributes a confidence score that should
 be weighted accordingly until a better checkpoint or a custom fine-tune is
 available.
+
+Raw debug output confirmed that Semgrep's free Community ruleset ran 153
+rules against `examples/vulnerable_samples/sql_injection.py` and returned
+zero findings without errors. Bandit reliably flags this reference SQL
+injection example; Semgrep does not. The dual-signal design still holds
+architecturally, but Bandit is the confirmed static-analysis signal for this
+specific example.

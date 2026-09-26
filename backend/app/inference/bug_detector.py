@@ -2,8 +2,6 @@ import re
 
 import torch
 
-from .model_loader import get_model, get_tokenizer
-
 
 def _label_name(config, index: int) -> str | None:
     id2label = getattr(config, "id2label", {}) or {}
@@ -39,6 +37,8 @@ def _cwe_from_config(config, index: int, label: str | None) -> str | None:
 
 
 def predict(code: str) -> dict:
+    from .model_loader import get_model, get_tokenizer
+
     tokenizer = get_tokenizer()
     model = get_model()
     inputs = tokenizer(code, return_tensors="pt", truncation=True)

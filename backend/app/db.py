@@ -30,9 +30,12 @@ def get_db_path() -> Path:
     return target
 
 
-_db_path = get_db_path()
-_db_path.parent.mkdir(parents=True, exist_ok=True)
-engine = create_engine(f"duckdb:///{_db_path.as_posix()}", future=True)
+if os.getenv("DUCKDB_PATH") == ":memory:":
+    engine = create_engine("duckdb:///:memory:", future=True)
+else:
+    _db_path = get_db_path()
+    _db_path.parent.mkdir(parents=True, exist_ok=True)
+    engine = create_engine(f"duckdb:///{_db_path.as_posix()}", future=True)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
 
