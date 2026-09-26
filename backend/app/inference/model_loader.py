@@ -2,10 +2,9 @@ import os
 
 from transformers import AutoModelForSequenceClassification, AutoTokenizer
 
-
 MODEL_CHECKPOINT = os.getenv(
     "MODEL_CHECKPOINT",
-    "mahdin70/codebert-devign-code-vulnerability-detector",
+    "mrm8488/codebert-base-finetuned-detect-insecure-code",
 )
 
 _tokenizer = AutoTokenizer.from_pretrained(MODEL_CHECKPOINT)

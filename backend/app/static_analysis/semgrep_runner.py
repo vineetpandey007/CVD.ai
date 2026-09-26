@@ -5,7 +5,6 @@ import tempfile
 
 from ..schemas import Finding
 
-
 SUBPROCESS_TIMEOUT_SECONDS = 30
 ALLOWED_LANGUAGES = {"python", "javascript", "java", "c", "cpp"}
 LANGUAGE_SUFFIX = {
@@ -42,6 +41,7 @@ def run_semgrep(code: str, language: str) -> list[Finding]:
             encoding="utf-8",
             timeout=SUBPROCESS_TIMEOUT_SECONDS,
             shell=False,
+            check=False,
         )
         try:
             report = json.loads(completed.stdout or "{}")

@@ -8,9 +8,7 @@ from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
 from app import db
-from app.routes.health import router as health_router
 from app.static_analysis.semgrep_runner import run_semgrep
-
 
 limiter = Limiter(key_func=get_remote_address)
 
@@ -45,6 +43,12 @@ async def generic_exception_handler(request: Request, exc: Exception) -> JSONRes
     return JSONResponse(status_code=500, content={"detail": "An unexpected error occurred."})
 
 
+from app.routes.analyze import router as analyze_router
+from app.routes.health import router as health_router
+from app.routes.history import router as history_router
+
 app.include_router(health_router)
+app.include_router(analyze_router)
+app.include_router(history_router)
 
 # TODO: mount future routers here when the analyze/history endpoints are implemented.

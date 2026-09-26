@@ -5,7 +5,6 @@ import tempfile
 
 from ..schemas import Finding
 
-
 SUBPROCESS_TIMEOUT_SECONDS = 15
 
 
@@ -18,10 +17,12 @@ def run_bandit(code: str) -> list[Finding]:
     try:
         completed = subprocess.run(
             ["bandit", "-f", "json", temp_path],
-            capture_output=True, text=True,
+            capture_output=True,
+            text=True,
             encoding="utf-8",
             timeout=SUBPROCESS_TIMEOUT_SECONDS,
             shell=False,
+            check=False,
         )
         try:
             report = json.loads(completed.stdout or "{}")
