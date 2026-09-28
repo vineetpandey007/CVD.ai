@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 
 @theme {
   --color-ink: #0E1116;
@@ -13,40 +13,33 @@
 
   --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-serif: "Fraunces", ui-serif, Georgia, serif;
 }
 
 @layer base {
   body {
     @apply bg-ink text-chalk font-sans antialiased;
   }
-
   ::selection {
     @apply bg-brand/30 text-chalk;
   }
 }
 
-@keyframes drift-slow {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(40px, -30px) scale(1.1); }
-}
-
-@keyframes drift-slow-reverse {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  50% { transform: translate(-30px, 40px) scale(1.05); }
-}
-
-.animate-drift-slow {
-  animation: drift-slow 24s ease-in-out infinite;
-}
-
-.animate-drift-slow-reverse {
-  animation: drift-slow-reverse 28s ease-in-out infinite;
+@layer components {
+  .glass {
+    @apply border border-white/10 bg-white/[0.04] backdrop-blur-xl;
+  }
+  .glass-strong {
+    @apply border border-white/15 bg-white/[0.07] backdrop-blur-2xl;
+  }
+  .ambient-mask {
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 70%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 70%, transparent 100%);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
