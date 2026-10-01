@@ -16,7 +16,7 @@ interface CodePanelProps {
 }
 
 export function CodePanel({ lines, filename = "views.py" }: CodePanelProps) {
-  const findings = lines.filter((l) => l.finding);
+  const findings = lines.flatMap((line) => (line.finding ? [line.finding] : []));
 
   return (
     <div className="glass-strong overflow-hidden rounded-2xl shadow-2xl shadow-black/40">

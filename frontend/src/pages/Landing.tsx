@@ -1,3 +1,6 @@
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
+
 import { FadeIn } from "../components/FadeIn";
 import { CodePanel } from "../components/CodePanel";
 import { Eyebrow } from "../components/Eyebrow";
@@ -48,6 +51,20 @@ const coverage = [
 ];
 
 export default function Landing() {
+  const location = useLocation();
+
+  useEffect(() => {
+    const targetId = location.hash.slice(1);
+    if (!targetId) return;
+
+    requestAnimationFrame(() => {
+      const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "auto"
+        : "smooth";
+      document.getElementById(targetId)?.scrollIntoView({ behavior });
+    });
+  }, [location.hash]);
+
   return (
     <main className="relative text-chalk">
       <section className="mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-center gap-14 px-6 pb-24 pt-32 lg:flex-row lg:items-center lg:gap-10">
@@ -71,12 +88,12 @@ export default function Landing() {
           </FadeIn>
           <FadeIn delay={360}>
             <div className="mt-8 flex flex-wrap items-center gap-4">
-              <a
-                href="/analyzer"
+              <Link
+                to="/analyzer"
                 className={`rounded-full bg-brand px-6 py-3 font-sans text-sm font-semibold tracking-tight text-ink transition ${EASE} hover:bg-brand/90`}
               >
                 Scan a snippet →
-              </a>
+              </Link>
               <a
                 href="https://github.com"
                 className={`font-sans text-sm text-fog underline decoration-fog/30 underline-offset-4 transition ${EASE} hover:text-chalk`}
@@ -166,12 +183,12 @@ export default function Landing() {
             <p className="mt-4 font-sans text-fog">
               Free and open source. No signup.
             </p>
-            <a
-              href="/analyzer"
+            <Link
+              to="/analyzer"
               className={`mt-8 inline-block rounded-full bg-brand px-7 py-3 font-sans text-sm font-semibold tracking-tight text-ink transition ${EASE} hover:bg-brand/90`}
             >
               Open the analyzer →
-            </a>
+            </Link>
           </div>
         </FadeIn>
       </section>
