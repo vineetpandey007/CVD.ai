@@ -4,6 +4,7 @@ import subprocess
 import tempfile
 
 from ..schemas import Finding
+from .subprocess_utils import run_command
 
 SUBPROCESS_TIMEOUT_SECONDS = 30
 ALLOWED_LANGUAGES = {"python", "javascript", "java", "c", "cpp"}
@@ -26,7 +27,7 @@ def run_semgrep(code: str, language: str) -> list[Finding]:
         temp_file.write(code)
         temp_path = temp_file.name
     try:
-        completed = subprocess.run(
+        completed = run_command(
             [
                 "semgrep",
                 "--config",
@@ -36,18 +37,17 @@ def run_semgrep(code: str, language: str) -> list[Finding]:
                 "--json",
                 temp_path,
             ],
-            capture_output=True,
-            text=True,
-            encoding="utf-8",
             timeout=SUBPROCESS_TIMEOUT_SECONDS,
-            shell=False,
-            check=False,
         )
+        if not completed.stdout.strip():
+            raise RuntimeError("Semgrep returned empty output")
         try:
-            report = json.loads(completed.stdout or "{}")
-        except json.JSONDecodeError:
-            return []
+            report = json.loads(completed.stdout)
+        except json.JSONDecodeError as exc:
+            raise RuntimeError("Semgrep returned invalid JSON") from exc
 
+        if report.get("errors"):
+            raise RuntimeError("Semgrep reported analysis errors")
         findings: list[Finding] = []
         for result in report.get("results", []):
             extra = result.get("extra", {})
@@ -66,8 +66,8 @@ def run_semgrep(code: str, language: str) -> list[Finding]:
                 )
             )
         return findings
-    except subprocess.TimeoutExpired:
-        return []
+    except subprocess.TimeoutExpired as exc:
+        raise TimeoutError("Semgrep analysis timed out") from exc
     except UnicodeDecodeError as exc:
         raise RuntimeError("Semgrep output was not valid UTF-8") from exc
     finally:

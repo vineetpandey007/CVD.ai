@@ -3,6 +3,7 @@ from types import ModuleType, SimpleNamespace
 from unittest.mock import Mock
 
 import torch
+
 from app.inference import bug_detector
 
 

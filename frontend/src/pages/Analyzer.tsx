@@ -129,7 +129,7 @@ export default function Analyzer() {
 
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             <p className="font-sans text-xs text-fog">
-              Up to 500 lines · Your code is not included in scan history
+              Up to 10,000 lines · Your code is not included in scan history
             </p>
             <button
               type="submit"

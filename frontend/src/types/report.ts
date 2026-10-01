@@ -12,4 +12,5 @@ export type AnalyzeResponse = {
   overall_confidence: number;
   findings: Finding[];
   scan_id: string;
+  analysis_warnings: string[];
 };

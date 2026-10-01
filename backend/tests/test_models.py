@@ -1,7 +1,8 @@
 import pytest
-from app import db, models
 from sqlalchemy import delete
 from sqlalchemy.orm import Session
+
+from app import db, models
 
 
 @pytest.fixture

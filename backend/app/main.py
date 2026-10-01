@@ -1,3 +1,4 @@
+import logging
 import os
 
 from fastapi import FastAPI, Request
@@ -11,6 +12,7 @@ from app import db
 from app.static_analysis.semgrep_runner import run_semgrep
 
 limiter = Limiter(key_func=get_remote_address)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="Code Vulnerability Detector")
 app.state.limiter = limiter
@@ -32,10 +34,26 @@ app.add_middleware(
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
+def warm_model() -> None:
+    from app.inference.model_loader import get_model, get_tokenizer
+
+    get_tokenizer()
+    get_model()
+
+
 @app.on_event("startup")
 async def startup_event() -> None:
     db.init_db()
-    run_semgrep("value = 1\n", "python")
+    try:
+        warm_model()
+    except Exception:
+        logger.exception("Model warm-up failed; continuing startup")
+    try:
+        run_semgrep("value = 1\n", "python")
+    except TimeoutError:
+        logger.warning("Semgrep warm-up timed out; continuing startup")
+    except Exception:
+        logger.exception("Semgrep warm-up failed; continuing startup")
 
 
 @app.exception_handler(Exception)
