@@ -16,3 +16,6 @@ pip install --no-deps -r ml/requirements-captum.txt
 
 Captum 0.8.0 declares `numpy<2.0`, while this Python 3.13 environment requires
 `numpy>=2.1`. The no-dependencies install preserves the NumPy 2.x pin above.
+
+Note: the CodeXGLUE defect-detection split is random rather than project-level,
+so reported scores will be optimistic compared with a project-level split.

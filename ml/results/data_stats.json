@@ -1,0 +1,84 @@
+{
+  "source": "datasets.load_dataset('code_x_glue_cc_defect_detection')",
+  "columns": [
+    "id",
+    "func",
+    "target",
+    "project",
+    "commit_id"
+  ],
+  "split_summary": {
+    "train": {
+      "split": "train",
+      "rows": 21854,
+      "label_counts": {
+        "0": 11836,
+        "1": 10018
+      },
+      "positive_rate": 0.45840578383819897
+    },
+    "validation": {
+      "split": "validation",
+      "rows": 2732,
+      "label_counts": {
+        "0": 1545,
+        "1": 1187
+      },
+      "positive_rate": 0.43448023426061494
+    },
+    "test": {
+      "split": "test",
+      "rows": 2732,
+      "label_counts": {
+        "0": 1477,
+        "1": 1255
+      },
+      "positive_rate": 0.45937042459736455
+    }
+  },
+  "within_split_duplicates": {
+    "train": {
+      "unique_functions": 21808,
+      "duplicate_groups": 46,
+      "duplicate_rows": 46
+    },
+    "validation": {
+      "unique_functions": 2732,
+      "duplicate_groups": 0,
+      "duplicate_rows": 0
+    },
+    "test": {
+      "unique_functions": 2731,
+      "duplicate_groups": 1,
+      "duplicate_rows": 1
+    }
+  },
+  "across_split_duplicates": {
+    "train_vs_validation": 8,
+    "test_vs_train": 4,
+    "test_vs_validation": 1
+  },
+  "cross_split_duplicates_removed": {
+    "validation": 9,
+    "test": 5
+  },
+  "token_length_stats": {
+    "raw": {
+      "count": 2000,
+      "min": 15,
+      "max": 84714,
+      "mean": 1102.6015,
+      "over_512": 936,
+      "pct_over_512": 46.800000000000004
+    },
+    "without_comments": {
+      "count": 2000,
+      "min": 15,
+      "max": 81827,
+      "mean": 1048.9795,
+      "over_512": 916,
+      "pct_over_512": 45.800000000000004
+    }
+  },
+  "pct_over_512_tokens": 46.800000000000004
+}
