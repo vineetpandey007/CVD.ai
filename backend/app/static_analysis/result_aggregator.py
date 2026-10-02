@@ -1,10 +1,11 @@
+from collections.abc import Iterable
+
 from ..schemas import Finding
 
 
 def merge_findings(
     model_result: dict,
-    bandit_findings: list[Finding],
-    semgrep_findings: list[Finding],
+    *tool_findings: Iterable[Finding],
 ) -> list[Finding]:
     model_finding = Finding(
         line=None,
@@ -14,4 +15,4 @@ def merge_findings(
         confidence=model_result.get("confidence"),
         source="model",
     )
-    return [model_finding, *bandit_findings, *semgrep_findings]
+    return [model_finding, *(finding for findings in tool_findings for finding in findings)]

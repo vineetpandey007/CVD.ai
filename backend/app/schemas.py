@@ -28,7 +28,15 @@ class Finding(BaseModel):
     label: str
     cwe: str | None = None
     confidence: float | None = None
-    source: Literal["model", "bandit", "semgrep"]
+    source: Literal[
+        "model",
+        "bandit",
+        "semgrep",
+        "ruff",
+        "flawfinder",
+        "cppcheck",
+        "njsscan",
+    ]
 
 
 class AnalyzeResponse(BaseModel):

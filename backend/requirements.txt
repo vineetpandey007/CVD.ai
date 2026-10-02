@@ -24,7 +24,11 @@ huggingface-hub>=0.17.0
 
 # --- Static analysis (line-accurate, complementary signal to the model) ---
 bandit>=1.7.5
-semgrep>=1.42.0
+semgrep==1.172.0
+ruff==0.16.6
+flawfinder==2.0.20
+cppcheck==1.5.1
+njsscan==1.0.1
 
 # --- Database ---
 duckdb>=1.1.0
@@ -46,7 +50,6 @@ pytest-timeout>=2.3.1
 httpx>=0.25.0                  # required by FastAPI's TestClient
 
 # --- Dev tools ---
-ruff>=0.1.0
 mypy>=1.5.0
 pre-commit>=3.4.0
 
@@ -60,7 +63,6 @@ pylint>=2.17.0
 radon>=6.0.1
 python-sonarqube-api>=1.3.1
 python-owasp-zap-v2.4>=0.0.21   # import as `zapv2`
-cppcheck>=1.5.1                 # wheel wrapper; version numbering doesn't track upstream cppcheck
 
 # --- Scanning this repo's own dependency supply chain ---
 pip-audit>=2.7.0

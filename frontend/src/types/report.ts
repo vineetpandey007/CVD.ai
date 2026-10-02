@@ -4,7 +4,14 @@ export type Finding = {
   label: string;
   cwe: string | null;
   confidence: number | null;
-  source: "model" | "bandit" | "semgrep";
+  source:
+    | "model"
+    | "bandit"
+    | "semgrep"
+    | "ruff"
+    | "flawfinder"
+    | "cppcheck"
+    | "njsscan";
 };
 
 export type AnalyzeResponse = {

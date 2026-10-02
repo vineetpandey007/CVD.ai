@@ -121,9 +121,9 @@ export default function Analyzer() {
               role="status"
               className="mt-4 rounded-xl border border-brand/20 bg-brand/5 px-4 py-3 font-sans text-sm leading-relaxed text-fog"
             >
-              Scan in progress. Analysis typically takes 30–40 seconds because
-              static-analysis tools inspect your code. You can leave this page
-               open while it runs.
+              Scan in progress. Analysis typically takes 40–60 seconds on this
+              setup because local static-analysis rules take time to initialize
+              and inspect your code. You can leave this page open while it runs.
             </p>
           )}
 
