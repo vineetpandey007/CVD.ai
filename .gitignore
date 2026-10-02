@@ -8,3 +8,9 @@ dist/
 !**/data/.gitkeep
 .pytest_cache/
 *.egg-info/
+ml/data/
+ml/checkpoints/
+*.pt
+*.safetensors
+*.bin
+ml/results/*.npy

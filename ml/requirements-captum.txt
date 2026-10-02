@@ -1,0 +1,2 @@
+# Install with --no-deps: Captum declares numpy<2.0, while Python 3.13 requires numpy>=2.1.
+captum==0.8.0
