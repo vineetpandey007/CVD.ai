@@ -1,4 +1,5 @@
 import json
+import os
 import time
 from pathlib import Path
 
@@ -39,12 +40,6 @@ SUPPORTED_LANGUAGES = {
     "njsscan": {"javascript"},
 }
 CASES = [record for record in BASELINE if record["found"] != "N/A"]
-INTERMITTENT_CASES = {
-    ("semgrep", "vulnerable_samples/78_javascript.js"),
-    ("semgrep", "vulnerable_samples/89_java.java"),
-}
-
-
 def _fixture_path(record: dict) -> Path:
     return REPO_ROOT / "examples" / record["fixture"]
 
@@ -103,9 +98,7 @@ def matrix_observations() -> dict[tuple[str, str], dict]:
         elapsed = time.perf_counter() - started
         for record in group:
             key = record["fixture"].replace("/", "_")
-            fixture_findings = batch_findings.get(
-                f"{key}.{_fixture_path(record).suffix[1:]}", []
-            )
+            fixture_findings = batch_findings.get(key, [])
             observations[("semgrep", record["fixture"])] = _record_result(
                 "semgrep",
                 record["fixture"],
@@ -197,11 +190,6 @@ def test_tool_matrix_asserts_measured_detection(
     record_property("tool_matrix_record", json.dumps(observed, sort_keys=True))
     if observed["warning"]:
         pytest.skip(f"Runner warning: {observed['warning']}")
-    if (record["tool"], record["fixture"]) in INTERMITTENT_CASES:
-        pytest.skip(
-            "Semgrep's CWE-78 JavaScript result varied between direct runs; "
-            "see docs/tool-coverage.md"
-        )
     assert observed["warning"] == record["warning"]
     if record["expected"]:
         assert record["expected_cwe"] in observed["found_cwes"]
@@ -259,9 +247,15 @@ def test_2000_line_inputs_record_direct_runner_timings(
                 if tool == "semgrep"
                 else len(findings)
             )
+        except NotImplementedError as exc:
+            count = "UNSUPPORTED"
+            warning = str(exc)
         except TimeoutError as exc:
             count = "TIMEOUT"
             warning = str(exc)
+        except Exception as exc:
+            count = "ERROR"
+            warning = f"{type(exc).__name__}: {exc}"
         elapsed = time.perf_counter() - started
         evidence = {
             "tool": tool,
@@ -401,3 +395,35 @@ def test_missing_cppcheck_is_reported_without_failing_api(monkeypatch) -> None:
 
     assert response.status_code == 200
     assert response.json()["analysis_warnings"] == ["cppcheck not installed"]
+
+
+@pytest.mark.skipif(
+    os.name != "nt",
+    reason="njsscan's libsast semantic scanner limitation is Windows-specific",
+)
+def test_njsscan_windows_limitation_is_reported_by_api(monkeypatch) -> None:
+    from fastapi.testclient import TestClient
+
+    from app import main
+    from app.routes import analyze as analyze_route
+
+    monkeypatch.setattr(main, "warm_model", lambda: None)
+    monkeypatch.setattr(main, "run_semgrep", lambda code, language: [])
+    monkeypatch.setattr(main.limiter, "enabled", False)
+    monkeypatch.setattr(
+        analyze_route,
+        "predict",
+        lambda code: {"vulnerable": False, "confidence": 0.0, "cwe": None},
+    )
+
+    with TestClient(main.app) as client:
+        response = client.post(
+            "/api/analyze",
+            json={"code": "function render(input) {}", "language": "javascript"},
+        )
+
+    assert response.status_code == 200
+    assert response.json()["analysis_warnings"] == [
+        "njsscan semantic analysis is unavailable on Windows because "
+        "libsast disables its Semgrep engine."
+    ]

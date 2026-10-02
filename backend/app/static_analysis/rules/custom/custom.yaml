@@ -1,0 +1,60 @@
+rules:
+  - id: custom.javascript.xss-html-sink
+    languages: [javascript]
+    severity: WARNING
+    message: Untrusted data is written to an HTML parsing sink.
+    metadata:
+      cwe: CWE-79
+    pattern-regex: '(?:\.innerHTML\s*=|document\.write\s*\()'
+
+  - id: custom.javascript.command-or-eval-concat
+    languages: [javascript]
+    severity: WARNING
+    message: Concatenated input is passed to eval or child_process.exec.
+    metadata:
+      cwe: CWE-78
+    pattern-regex: '\b(?:eval|exec|child_process\.exec)\s*\([^;\n]*\+[^;\n]*\)'
+
+  - id: custom.sql.javascript-string-concat
+    languages: [javascript]
+    severity: WARNING
+    message: SQL text is concatenated with a value.
+    metadata:
+      cwe: CWE-89
+    pattern-regex: '(?i)\b(?:SELECT|INSERT|UPDATE|DELETE)\b[^;\n]*\+\s*[A-Za-z_$][\w$]*'
+
+  - id: custom.sql.java-string-concat
+    languages: [java]
+    severity: WARNING
+    message: SQL text is concatenated with a value.
+    metadata:
+      cwe: CWE-89
+    pattern-regex: '(?i)\b(?:SELECT|INSERT|UPDATE|DELETE)\b[^;\n]*\+\s*[A-Za-z_$][\w$]*'
+
+  - id: custom.path-traversal.concatenated-file-path
+    languages: [python, javascript, java]
+    severity: WARNING
+    message: A concatenated path is used to open or read a file.
+    metadata:
+      cwe: CWE-22
+    pattern-regex: '(?:\bopen\s*\([^;\n]*\+[^;\n]*\)|\breadFileSync\s*\([^;\n]*\+[^;\n]*\)|\bPath\.of\s*\([^;\n]*\+[^;\n]*\))'
+
+  - id: custom.path-traversal.c-buffer-open
+    languages: [c]
+    severity: WARNING
+    message: A concatenated path is used to open a file.
+    metadata:
+      cwe: CWE-22
+    patterns:
+      - pattern: |
+          sprintf($PATH, $FORMAT, $USER);
+          ...
+          fopen($PATH, $MODE);
+
+  - id: custom.path-traversal.cpp-ifstream-concat
+    languages: [cpp]
+    severity: WARNING
+    message: A concatenated path is used to open a file.
+    metadata:
+      cwe: CWE-22
+    pattern-regex: '\bifstream\s+\w+\s*\([^;\n]*\+[^;\n]*\)'

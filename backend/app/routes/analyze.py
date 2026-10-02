@@ -48,6 +48,9 @@ async def _run_tool_safely(
         logger.warning("%s is not installed", display_name)
         warning = "cppcheck not installed" if source == "cppcheck" else f"{display_name} not installed."
         return [], warning
+    except NotImplementedError as exc:
+        logger.warning("%s", exc)
+        return [], str(exc)
     except Exception:
         logger.exception("%s analysis failed; continuing without its findings", display_name)
         return [], f"{display_name} analysis failed."

@@ -21,5 +21,14 @@ The source snapshots above retain the complete downloaded packs. Regenerate the
 per-language files only from those snapshots; runtime scans make no Registry
 requests.
 
+The runner also loads `custom/custom.yaml` for focused rules covering JavaScript
+HTML sinks and concatenated command/eval input, JavaScript/Java SQL
+concatenation, and concatenated file paths in Python, JavaScript, Java, C, and
+C++.
+
+On Windows, njsscan's `libsast` dependency disables its Semgrep engine and
+returns no semantic findings. The application reports njsscan as unavailable
+on that platform rather than treating the empty CLI output as a clean scan.
+
 These rules are distributed under the Semgrep Rules License v1.0. See
 https://semgrep.dev/legal/rules-license.

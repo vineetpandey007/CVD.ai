@@ -9,7 +9,7 @@ from ..schemas import Finding
 from .cwe_lookup import get_cwe
 from .subprocess_utils import run_command
 
-SUBPROCESS_TIMEOUT_SECONDS = 62
+SUBPROCESS_TIMEOUT_SECONDS = 120
 SEMGREP_TIMEOUT_SECONDS = 10
 ALLOWED_LANGUAGES = {"python", "javascript", "java", "c", "cpp"}
 LANGUAGE_SUFFIX = {
@@ -38,6 +38,7 @@ def _command(language: str, targets: Sequence[str]) -> tuple[list[str], dict[str
     command = ["semgrep", "--metrics=off", "--disable-version-check"]
     command.extend(["--timeout", str(SEMGREP_TIMEOUT_SECONDS)])
     command.extend(["--config", str(RULE_DIR / RULE_CONFIGS[language])])
+    command.extend(["--config", str(RULE_DIR / "custom" / "custom.yaml")])
     command.extend(["--json", *targets])
     return command, env
 

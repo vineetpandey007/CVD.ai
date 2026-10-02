@@ -1165,9 +1165,11 @@
     "language": "c",
     "expected": true,
     "expected_cwe": "CWE-120",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "found": 1,
+    "found_cwes": [
+      "CWE-676"
+    ],
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1178,7 +1180,7 @@
     "expected_cwe": "CWE-120",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1187,9 +1189,11 @@
     "language": "c",
     "expected": true,
     "expected_cwe": "CWE-22",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "found": 1,
+    "found_cwes": [
+      "CWE-22"
+    ],
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1198,9 +1202,11 @@
     "language": "cpp",
     "expected": true,
     "expected_cwe": "CWE-22",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "found": 1,
+    "found_cwes": [
+      "CWE-22"
+    ],
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1209,9 +1215,11 @@
     "language": "java",
     "expected": true,
     "expected_cwe": "CWE-22",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "found": 1,
+    "found_cwes": [
+      "CWE-22"
+    ],
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1220,9 +1228,11 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-22",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "found": 1,
+    "found_cwes": [
+      "CWE-22"
+    ],
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1231,9 +1241,11 @@
     "language": "python",
     "expected": true,
     "expected_cwe": "CWE-22",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "found": 1,
+    "found_cwes": [
+      "CWE-22"
+    ],
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1244,7 +1256,7 @@
     "expected_cwe": "CWE-502",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1253,9 +1265,11 @@
     "language": "java",
     "expected": true,
     "expected_cwe": "CWE-502",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "found": 1,
+    "found_cwes": [
+      "CWE-502"
+    ],
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1266,7 +1280,7 @@
     "expected_cwe": "CWE-502",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1275,9 +1289,11 @@
     "language": "python",
     "expected": true,
     "expected_cwe": "CWE-502",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "found": 1,
+    "found_cwes": [
+      "CWE-502"
+    ],
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1288,7 +1304,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1299,7 +1315,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1310,7 +1326,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1319,11 +1335,11 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-78",
-    "found": 1,
+    "found": 2,
     "found_cwes": [
       "CWE-78"
     ],
-    "elapsed_seconds": 30.339,
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1334,7 +1350,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1345,7 +1361,7 @@
     "expected_cwe": "CWE-79",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1356,7 +1372,7 @@
     "expected_cwe": "CWE-79",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1365,9 +1381,11 @@
     "language": "java",
     "expected": true,
     "expected_cwe": "CWE-79",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "found": 1,
+    "found_cwes": [
+      "CWE-79"
+    ],
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1376,9 +1394,11 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-79",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "found": 1,
+    "found_cwes": [
+      "CWE-79"
+    ],
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1387,9 +1407,11 @@
     "language": "python",
     "expected": true,
     "expected_cwe": "CWE-79",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "found": 2,
+    "found_cwes": [
+      "CWE-79"
+    ],
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1400,7 +1422,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1411,7 +1433,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1420,11 +1442,11 @@
     "language": "java",
     "expected": true,
     "expected_cwe": "CWE-89",
-    "found": 1,
+    "found": 2,
     "found_cwes": [
       "CWE-89"
     ],
-    "elapsed_seconds": 27.984,
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1433,9 +1455,11 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-89",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "found": 1,
+    "found_cwes": [
+      "CWE-89"
+    ],
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1446,7 +1470,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1457,7 +1481,7 @@
     "expected_cwe": "CWE-120",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1468,7 +1492,7 @@
     "expected_cwe": "CWE-120",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1479,7 +1503,7 @@
     "expected_cwe": "CWE-22",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1490,7 +1514,7 @@
     "expected_cwe": "CWE-22",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1501,7 +1525,7 @@
     "expected_cwe": "CWE-22",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1512,7 +1536,7 @@
     "expected_cwe": "CWE-22",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1523,7 +1547,7 @@
     "expected_cwe": "CWE-22",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1534,7 +1558,7 @@
     "expected_cwe": "CWE-502",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1545,7 +1569,7 @@
     "expected_cwe": "CWE-502",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1556,7 +1580,7 @@
     "expected_cwe": "CWE-502",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1567,7 +1591,7 @@
     "expected_cwe": "CWE-502",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1578,7 +1602,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1589,7 +1613,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1600,7 +1624,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1611,7 +1635,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1622,7 +1646,7 @@
     "expected_cwe": "CWE-78",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1633,7 +1657,7 @@
     "expected_cwe": "CWE-79",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1644,7 +1668,7 @@
     "expected_cwe": "CWE-79",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1655,7 +1679,7 @@
     "expected_cwe": "CWE-79",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1666,7 +1690,7 @@
     "expected_cwe": "CWE-79",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1675,9 +1699,11 @@
     "language": "python",
     "expected": false,
     "expected_cwe": "CWE-79",
-    "found": 0,
-    "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "found": 2,
+    "found_cwes": [
+      "CWE-79"
+    ],
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -1688,7 +1714,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 24.81,
+    "elapsed_seconds": 29.283,
     "warning": null
   },
   {
@@ -1699,7 +1725,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 26.111,
+    "elapsed_seconds": 29.974,
     "warning": null
   },
   {
@@ -1710,7 +1736,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 31.359,
+    "elapsed_seconds": 36.688,
     "warning": null
   },
   {
@@ -1721,7 +1747,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 34.065,
+    "elapsed_seconds": 38.511,
     "warning": null
   },
   {
@@ -1732,7 +1758,7 @@
     "expected_cwe": "CWE-89",
     "found": 0,
     "found_cwes": [],
-    "elapsed_seconds": 44.141,
+    "elapsed_seconds": 49.267,
     "warning": null
   },
   {
@@ -2936,7 +2962,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -2947,7 +2973,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -2958,7 +2984,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -2969,7 +2995,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -2980,7 +3006,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -2988,10 +3014,10 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-22",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 4.074,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3002,7 +3028,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3013,7 +3039,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3024,7 +3050,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3032,10 +3058,10 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-502",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.433,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3046,7 +3072,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3057,7 +3083,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3068,7 +3094,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3079,7 +3105,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3087,10 +3113,10 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-78",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.961,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3101,7 +3127,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3112,7 +3138,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3123,7 +3149,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3134,7 +3160,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3142,10 +3168,10 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-79",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.723,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3156,7 +3182,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3167,7 +3193,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3178,7 +3204,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3189,7 +3215,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3197,10 +3223,10 @@
     "language": "javascript",
     "expected": true,
     "expected_cwe": "CWE-89",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.583,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3211,7 +3237,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3222,7 +3248,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3233,7 +3259,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3244,7 +3270,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3255,7 +3281,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3266,7 +3292,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3274,10 +3300,10 @@
     "language": "javascript",
     "expected": false,
     "expected_cwe": "CWE-22",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.717,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3288,7 +3314,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3299,7 +3325,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3310,7 +3336,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3318,10 +3344,10 @@
     "language": "javascript",
     "expected": false,
     "expected_cwe": "CWE-502",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.718,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3332,7 +3358,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3343,7 +3369,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3354,7 +3380,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3365,7 +3391,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3373,10 +3399,10 @@
     "language": "javascript",
     "expected": false,
     "expected_cwe": "CWE-78",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 4.075,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3387,7 +3413,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3398,7 +3424,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3409,7 +3435,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3420,7 +3446,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3428,10 +3454,10 @@
     "language": "javascript",
     "expected": false,
     "expected_cwe": "CWE-79",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.783,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3442,7 +3468,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3453,7 +3479,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3464,7 +3490,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3475,7 +3501,7 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3483,10 +3509,10 @@
     "language": "javascript",
     "expected": false,
     "expected_cwe": "CWE-89",
-    "found": 0,
+    "found": "N/A",
     "found_cwes": [],
-    "elapsed_seconds": 3.681,
-    "warning": null
+    "elapsed_seconds": 0.0,
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   },
   {
     "tool": "njsscan",
@@ -3497,6 +3523,6 @@
     "found": "N/A",
     "found_cwes": [],
     "elapsed_seconds": 0.0,
-    "warning": null
+    "warning": "NotImplementedError: njsscan semantic analysis is unavailable on Windows because libsast disables its Semgrep engine."
   }
 ]

@@ -13,6 +13,11 @@ SUBPROCESS_TIMEOUT_SECONDS = 20
 def run_njsscan(code: str, language: str = "javascript") -> list[Finding]:
     if language != "javascript":
         raise ValueError(f"njsscan supports JavaScript only, not {language}")
+    if os.name == "nt":
+        raise NotImplementedError(
+            "njsscan semantic analysis is unavailable on Windows because "
+            "libsast disables its Semgrep engine."
+        )
     with tempfile.NamedTemporaryFile(
         mode="w", suffix=".js", delete=False, encoding="utf-8"
     ) as temp_file:
