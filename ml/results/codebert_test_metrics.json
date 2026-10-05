@@ -1,0 +1,23 @@
+{
+  "checkpoint": "ml/checkpoints/best_codebert/epoch_3_f1_0.3752",
+  "device": "cuda",
+  "test_rows": 2727,
+  "threshold": 0.5,
+  "accuracy": 0.6182618261826183,
+  "precision": 0.7442396313364056,
+  "recall": 0.257781324820431,
+  "f1": 0.38292827504445764,
+  "mcc": 0.2485897492328244,
+  "roc_auc": 0.6310566986586331,
+  "pr_auc": 0.6499561041308959,
+  "confusion_matrix": [
+    [
+      1363,
+      111
+    ],
+    [
+      930,
+      323
+    ]
+  ]
+}
