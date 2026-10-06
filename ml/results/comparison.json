@@ -1,0 +1,88 @@
+{
+  "comparison": [
+    {
+      "model": "Dummy (majority)",
+      "accuracy": 0.5405,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mcc": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.4595
+    },
+    {
+      "model": "Dummy (random)",
+      "accuracy": 0.4855,
+      "precision": 0.4442,
+      "recall": 0.4765,
+      "f1": 0.4598,
+      "mcc": -0.0302,
+      "roc_auc": 0.4851,
+      "pr_auc": 0.4461
+    },
+    {
+      "model": "Flawfinder (n=300)",
+      "accuracy": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mcc": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.75
+    },
+    {
+      "model": "Cppcheck (n=300)",
+      "accuracy": 0.5,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "mcc": 0.0,
+      "roc_auc": 0.5,
+      "pr_auc": 0.75
+    },
+    {
+      "model": "TF-IDF + LR",
+      "accuracy": 0.6252,
+      "precision": 0.5828,
+      "recall": 0.6488,
+      "f1": 0.614,
+      "mcc": 0.2532,
+      "roc_auc": 0.6927,
+      "pr_auc": 0.6462
+    },
+    {
+      "model": "Frozen CodeBERT + LR",
+      "accuracy": 0.5974,
+      "precision": 0.5605,
+      "recall": 0.573,
+      "f1": 0.5667,
+      "mcc": 0.1908,
+      "roc_auc": 0.6399,
+      "pr_auc": 0.6282
+    },
+    {
+      "model": "Fine-tuned CodeBERT",
+      "accuracy": 0.6182618261826183,
+      "precision": 0.7442396313364056,
+      "recall": 0.257781324820431,
+      "f1": 0.38292827504445764,
+      "mcc": 0.2485897492328244,
+      "roc_auc": 0.6310566986586331,
+      "pr_auc": 0.6499561041308959
+    }
+  ],
+  "bootstrap_ci": {
+    "codebert_f1_95ci": [
+      0.3540894865939271,
+      0.4099427303405495
+    ],
+    "codebert_mcc_95ci": [
+      0.21515822396277123,
+      0.27945711385246086
+    ]
+  },
+  "static_tool_runtimes_sec_per_func": {
+    "flawfinder_avg": 0.02342009623845418,
+    "cppcheck_avg": 0.023068937460581463
+  }
+}
