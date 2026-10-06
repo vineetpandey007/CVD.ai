@@ -19,6 +19,7 @@ from ml.src.metrics import compute_metrics
 CHECKPOINT_ROOT = ROOT / "checkpoints" / "best_codebert"
 TEST_PATH = ROOT / "data" / "processed" / "test.jsonl"
 OUTPUT_PATH = ROOT / "results" / "codebert_test_metrics.json"
+PREDICTIONS_PATH = ROOT / "results" / "codebert_test_predictions.jsonl"
 BASELINE_PATH = ROOT / "results" / "tfidf_metrics.json"
 BATCH_SIZE = 16
 
@@ -133,15 +134,21 @@ def main() -> None:
 
     y_true = np.asarray([int(row["label"]) for row in rows], dtype=int)
     y_prob: list[float] = []
+    token_lengths: list[int] = []
     with torch.no_grad():
         for start in tqdm(range(0, len(rows), BATCH_SIZE), desc="Evaluating test set"):
             batch_rows = rows[start : start + BATCH_SIZE]
-            batch = tokenize_batch(
-                [str(row["code"]) for row in batch_rows], tokenizer, max_length
-            )
+            texts = [str(row["code"]) for row in batch_rows]
+            batch = tokenize_batch(texts, tokenizer, max_length)
             batch = {name: tensor.to(device) for name, tensor in batch.items()}
             logits = model(**batch).logits
             y_prob.extend(torch.softmax(logits, dim=-1)[:, 1].cpu().tolist())
+            token_lengths.extend(
+                len(encoding.ids)
+                for encoding in tokenizer.backend_tokenizer.encode_batch(
+                    texts, add_special_tokens=False
+                )
+            )
 
     metrics = compute_metrics(y_true, y_prob)
     result = {
@@ -153,6 +160,21 @@ def main() -> None:
     }
     OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
     OUTPUT_PATH.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    with PREDICTIONS_PATH.open("w", encoding="utf-8") as handle:
+        for row, probability, token_length in zip(rows, y_prob, token_lengths):
+            handle.write(
+                json.dumps(
+                    {
+                        "id": row.get("id"),
+                        "label": int(row["label"]),
+                        "probability": float(probability),
+                        "token_length": token_length,
+                        "prediction": int(probability >= 0.5),
+                    },
+                    allow_nan=False,
+                )
+                + "\n"
+            )
 
     print(f"checkpoint={checkpoint}")
     print(f"device={device}")
@@ -164,6 +186,7 @@ def main() -> None:
     print(f"pr_auc={metrics['pr_auc']}")
     print(f"confusion_matrix={metrics['confusion_matrix']}")
     print(f"saved={OUTPUT_PATH}")
+    print(f"saved_predictions={PREDICTIONS_PATH}")
     compare_baseline(metrics)
 
 
