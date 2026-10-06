@@ -1,111 +1,82 @@
-import asyncio
-import logging
-from typing import Annotated, Any
-
-from fastapi import APIRouter, Depends, Request
-from sqlalchemy.orm import Session
+from fastapi import APIRouter, HTTPException, Request
 from starlette.concurrency import run_in_threadpool
+import json
+import os
 
-from app import models
-from app.db import get_db
-from app.inference.bug_detector import predict
-from app.main import limiter
-from app.schemas import AnalyzeRequest, AnalyzeResponse, Finding
-from app.static_analysis.bandit_runner import run_bandit
-from app.static_analysis.cppcheck_runner import run_cppcheck
-from app.static_analysis.flawfinder_runner import run_flawfinder
-from app.static_analysis.njsscan_runner import run_njsscan
-from app.static_analysis.result_aggregator import merge_findings
-from app.static_analysis.ruff_runner import run_ruff
-from app.static_analysis.semgrep_runner import run_semgrep
+from app.schemas import AnalyzeRequest, AnalyzeResponse, FunctionResult, ModelInfo
 
 router = APIRouter()
-logger = logging.getLogger(__name__)
 
+def get_comparison_data():
+    comp_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../ml/results/comparison.json"))
+    if os.path.exists(comp_path):
+        with open(comp_path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return {}
 
-async def _predict_safely(code: str) -> dict[str, Any]:
-    try:
-        return await run_in_threadpool(predict, code)
-    except Exception:
-        logger.exception("Model prediction failed; continuing with static analysis")
-        return {"vulnerable": False, "confidence": 0.0, "cwe": None}
+@router.post("/analyze", response_model=AnalyzeResponse)
+async def analyze_code(request: Request, payload: AnalyzeRequest):
+    # 1. 503 if model is missing or still booting
+    if not request.app.state.model_loaded or not request.app.state.cvd_model:
+        raise HTTPException(status_code=503, detail="Model is still loading or failed to load. Please try again in a few seconds.")
+    
+    # 2. 422 if language is unsupported
+    if payload.language.lower() not in ["c", "cpp"]:
+        raise HTTPException(status_code=422, detail="The NLP model only supports C and C++ source code.")
 
+    model = request.app.state.cvd_model
 
-async def _run_tool_safely(
-    source: str,
-    display_name: str,
-    runner: Any,
-    code: str,
-    language: str | None = None,
-) -> tuple[list[Finding], str | None]:
-    try:
-        args = (code,) if language is None else (code, language)
-        return await run_in_threadpool(runner, *args), None
-    except TimeoutError:
-        logger.warning("%s analysis timed out", display_name)
-        return [], f"{display_name} analysis timed out."
-    except FileNotFoundError:
-        logger.warning("%s is not installed", display_name)
-        warning = "cppcheck not installed" if source == "cppcheck" else f"{display_name} not installed."
-        return [], warning
-    except NotImplementedError as exc:
-        logger.warning("%s", exc)
-        return [], str(exc)
-    except Exception:
-        logger.exception("%s analysis failed; continuing without its findings", display_name)
-        return [], f"{display_name} analysis failed."
+    # 3. Threaded inference
+    results = await run_in_threadpool(model.predict_functions, payload.code, payload.language.lower())
+    
+    functions = []
+    max_prob = 0.0
+    is_vulnerable = False
 
+    for res in results:
+        prob = res["probability"]
+        max_prob = max(max_prob, prob)
+        if prob >= model.threshold:
+            is_vulnerable = True
+            
+        functions.append(FunctionResult(
+            name=res["name"],
+            start_line=res["start_line"],
+            end_line=res["end_line"],
+            probability=prob,
+            truncated=res["truncated"]
+        ))
 
-@router.post("/api/analyze", response_model=AnalyzeResponse)
-@limiter.limit("10/minute")
-async def analyze(
-    request: Request,
-    payload: AnalyzeRequest,
-    session: Annotated[Session, Depends(get_db)],
-) -> AnalyzeResponse:
-    tools: list[tuple[str, str, Any, str | None]] = []
-    if payload.language == "python":
-        tools.extend(
-            [
-                ("bandit", "Bandit", run_bandit, None),
-                ("ruff", "Ruff", run_ruff, payload.language),
-            ]
-        )
-    elif payload.language == "javascript":
-        tools.append(("njsscan", "njsscan", run_njsscan, payload.language))
-    elif payload.language in {"c", "cpp"}:
-        tools.extend(
-            [
-                ("flawfinder", "Flawfinder", run_flawfinder, payload.language),
-                ("cppcheck", "Cppcheck", run_cppcheck, payload.language),
-            ]
-        )
-    tools.append(("semgrep", "Semgrep", run_semgrep, payload.language))
+    # 4. Read test F1 dynamically from JSON
+    comp_data = get_comparison_data()
+    test_f1 = 0.0
+    for row in comp_data.get("comparison", []):
+        if row.get("model") == "Fine-tuned CodeBERT":
+            test_f1 = row.get("f1", 0.0)
 
-    model_result, *tool_results = await asyncio.gather(
-        _predict_safely(payload.code),
-        *(
-            _run_tool_safely(source, display, runner, payload.code, language)
-            for source, display, runner, language in tools
-        ),
+    model_info = ModelInfo(
+        checkpoint="CodeBERT (Epoch 3)",
+        threshold=model.threshold,
+        training_data="Devign (CodeXGLUE)",
+        test_f1=test_f1
     )
-    tool_findings = [findings for findings, _ in tool_results]
-    analysis_warnings = [warning for _, warning in tool_results if warning]
-    findings = merge_findings(model_result, *tool_findings)
-    static_findings = [finding for finding in findings if finding.source != "model"]
-    vulnerable = bool(static_findings)
-    overall_confidence = 0.99 if vulnerable else 0.0
-    record = models.create_scan(
-        session,
-        payload.language,
-        vulnerable,
-        overall_confidence,
-        findings,
-    )
+
     return AnalyzeResponse(
-        vulnerable=vulnerable,
-        overall_confidence=overall_confidence,
-        findings=findings,
-        scan_id=record.id,
-        analysis_warnings=analysis_warnings,
+        vulnerable=is_vulnerable,
+        overall_confidence=max_prob,
+        functions=functions,
+        model_info=model_info
     )
+
+@router.get("/model-card")
+async def get_model_card():
+    comp_data = get_comparison_data()
+    return {
+        "metrics": comp_data.get("comparison", []),
+        "bootstrap_ci": comp_data.get("bootstrap_ci", {}),
+        "limitations": [
+            "Trained exclusively on C/C++ (Devign dataset).",
+            "Functions exceeding 512 tokens are truncated.",
+            "Probabilistic model; not a guarantee of security."
+        ]
+    }

@@ -1,47 +1,28 @@
-from typing import Literal
-
-from pydantic import BaseModel, Field, field_validator
-
-MAX_CODE_LINES = 10000
-MAX_CODE_BYTES = 500000
-
+from pydantic import BaseModel, Field
+from typing import List, Optional
 
 class AnalyzeRequest(BaseModel):
-    code: str
-    language: Literal["python", "javascript", "java", "c", "cpp"]
+    code: str = Field(..., max_length=50000)
+    language: str
+    explain: bool = False
 
-    @field_validator("code")
-    @classmethod
-    def validate_code_size(cls, value: str) -> str:
-        byte_count = len(value.encode("utf-8"))
-        if byte_count > MAX_CODE_BYTES:
-            raise ValueError(f"Code must be {MAX_CODE_BYTES} bytes or fewer.")
-        line_count = len(value.splitlines())
-        if line_count > MAX_CODE_LINES:
-            raise ValueError(f"Code must be {MAX_CODE_LINES} lines or fewer.")
-        return value
+class FunctionResult(BaseModel):
+    name: str
+    start_line: int
+    end_line: int
+    probability: float
+    truncated: bool
+    # We leave room for line attributions in Module 9
+    line_scores: Optional[List[dict]] = None 
 
-
-class Finding(BaseModel):
-    line: int | None = None
-    severity: Literal["vulnerable", "clear"]
-    label: str
-    cwe: str | None = None
-    confidence: float | None = None
-    source: Literal[
-        "model",
-        "bandit",
-        "semgrep",
-        "ruff",
-        "flawfinder",
-        "cppcheck",
-        "njsscan",
-    ]
-
+class ModelInfo(BaseModel):
+    checkpoint: str
+    threshold: float
+    training_data: str
+    test_f1: float
 
 class AnalyzeResponse(BaseModel):
     vulnerable: bool
-    overall_confidence: float = Field(ge=0.0, le=1.0)
-    findings: list[Finding]
-    scan_id: str
-    analysis_warnings: list[str] = Field(default_factory=list)
+    overall_confidence: float
+    functions: List[FunctionResult]
+    model_info: ModelInfo
