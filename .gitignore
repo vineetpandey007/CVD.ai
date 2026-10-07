@@ -1,16 +1,17 @@
-.venv/
-__pycache__/
-*.pyc
-.env
-node_modules/
-dist/
-**/data/*
-!**/data/.gitkeep
-.pytest_cache/
-*.egg-info/
-ml/data/
+# Python & ML
+ml/.venv/
 ml/checkpoints/
-*.pt
-*.safetensors
+__pycache__/
+*.py[cod]
+*.pth
 *.bin
-ml/results/*.npy
+.env
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# ZIPs & OS
+*.zip
+.DS_Store

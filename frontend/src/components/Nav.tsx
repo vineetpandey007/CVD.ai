@@ -2,26 +2,36 @@ import { Link, useLocation } from 'react-router-dom';
 
 export default function Nav() {
   const location = useLocation();
-  
+
+  const NavLink = ({ to, label }: { to: string, label: string }) => {
+    const isActive = location.pathname === to;
+    return (
+      <Link 
+        to={to} 
+        className={`px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+          isActive 
+            ? 'bg-blue-500/10 text-blue-400' 
+            : 'text-gray-400 hover:text-white hover:bg-gray-800/50'
+        }`}
+      >
+        {label}
+      </Link>
+    );
+  };
+
   return (
-    <nav className="fixed top-0 w-full z-50 bg-gray-950/80 backdrop-blur-md border-b border-gray-800">
-      <div className="max-w-5xl mx-auto px-6 h-16 flex items-center justify-between">
-        <Link to="/" className="text-xl font-bold text-gray-100 tracking-tighter hover:text-white transition-colors">
+    <nav className="w-full py-4 px-6 sm:px-8 flex justify-between items-center absolute top-0 z-50 bg-gray-950/50 backdrop-blur-md border-b border-gray-800/50">
+      <div className="flex items-center gap-8">
+        <Link to="/" className="text-2xl font-bold tracking-tighter text-white transition-colors">
           CVD<span className="text-blue-500">.ai</span>
         </Link>
-        <div className="flex gap-6 text-sm font-medium text-gray-400">
-          <Link 
-            to="/analyze" 
-            className={`hover:text-gray-100 transition-colors ${location.pathname === '/analyze' ? 'text-gray-100' : ''}`}
-          >
-            Analyzer
-          </Link>
-          <Link 
-            to="/model" 
-            className={`hover:text-gray-100 transition-colors ${location.pathname === '/model' ? 'text-gray-100' : ''}`}
-          >
-            Model Card
-          </Link>
+        
+        {/* Expanded Menu Bar */}
+        <div className="hidden md:flex items-center gap-2">
+          <NavLink to="/" label="Platform" />
+          <NavLink to="/analyzer" label="Code Analyzer" />
+          <NavLink to="/model" label="AI Architecture" />
+          <a href="https://github.com" target="_blank" rel="noreferrer" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">Documentation</a>
         </div>
       </div>
     </nav>
