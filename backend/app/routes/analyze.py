@@ -4,6 +4,7 @@ import json
 import os
 
 from app.schemas import AnalyzeRequest, AnalyzeResponse, FunctionResult, ModelInfo
+from app.lime_explainer import CVDExplainer
 
 router = APIRouter()
 
@@ -16,56 +17,49 @@ def get_comparison_data():
 
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_code(request: Request, payload: AnalyzeRequest):
-    # 1. 503 if model is missing or still booting
     if not request.app.state.model_loaded or not request.app.state.cvd_model:
-        raise HTTPException(status_code=503, detail="Model is still loading or failed to load. Please try again in a few seconds.")
+        raise HTTPException(status_code=503, detail="Model is loading. Try again.")
     
-    # 2. 422 if language is unsupported
     if payload.language.lower() not in ["c", "cpp"]:
-        raise HTTPException(status_code=422, detail="The NLP model only supports C and C++ source code.")
+        raise HTTPException(status_code=422, detail="Only C/C++ supported.")
 
     model = request.app.state.cvd_model
-
-    # 3. Threaded inference
     results = await run_in_threadpool(model.predict_functions, payload.code, payload.language.lower())
     
     functions = []
     max_prob = 0.0
     is_vulnerable = False
+    
+    explainer = CVDExplainer(model)
+    code_lines = payload.code.split('\n')
 
     for res in results:
         prob = res["probability"]
         max_prob = max(max_prob, prob)
+        line_scores = []
+        
         if prob >= model.threshold:
             is_vulnerable = True
+            fn_code = "\n".join(code_lines[res["start_line"]-1 : res["end_line"]])
+            line_scores = await run_in_threadpool(explainer.explain, fn_code, res["start_line"])
             
         functions.append(FunctionResult(
             name=res["name"],
             start_line=res["start_line"],
             end_line=res["end_line"],
             probability=prob,
-            truncated=res["truncated"]
+            truncated=res["truncated"],
+            line_scores=line_scores
         ))
 
-    # 4. Read test F1 dynamically from JSON
     comp_data = get_comparison_data()
-    test_f1 = 0.0
-    for row in comp_data.get("comparison", []):
-        if row.get("model") == "Fine-tuned CodeBERT":
-            test_f1 = row.get("f1", 0.0)
-
-    model_info = ModelInfo(
-        checkpoint="CodeBERT (Epoch 3)",
-        threshold=model.threshold,
-        training_data="Devign (CodeXGLUE)",
-        test_f1=test_f1
-    )
+    test_f1 = next((row.get("f1", 0.0) for row in comp_data.get("comparison", []) if row.get("model") == "Fine-tuned CodeBERT"), 0.0)
 
     return AnalyzeResponse(
         vulnerable=is_vulnerable,
         overall_confidence=max_prob,
         functions=functions,
-        model_info=model_info
+        model_info=ModelInfo(checkpoint="CodeBERT (Epoch 3)", threshold=model.threshold, training_data="Devign", test_f1=test_f1)
     )
 
 @router.get("/model-card")

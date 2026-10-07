@@ -1,10 +1,14 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 from typing import List, Optional
 
 class AnalyzeRequest(BaseModel):
-    code: str = Field(..., max_length=50000)
+    code: str
     language: str
-    explain: bool = False
+
+class LineScore(BaseModel):
+    line: int
+    score: float
+    top_tokens: List[str]
 
 class FunctionResult(BaseModel):
     name: str
@@ -12,8 +16,7 @@ class FunctionResult(BaseModel):
     end_line: int
     probability: float
     truncated: bool
-    # We leave room for line attributions in Module 9
-    line_scores: Optional[List[dict]] = None 
+    line_scores: Optional[List[LineScore]] = []
 
 class ModelInfo(BaseModel):
     checkpoint: str

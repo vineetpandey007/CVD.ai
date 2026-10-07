@@ -7,7 +7,7 @@ export default function Results() {
   const result = location.state?.result as AnalyzeResponse;
 
   if (!result) {
-    return <Navigate to="/analyze" replace />;
+    return <Navigate to="/analyzer" replace />;
   }
 
   return (
@@ -15,7 +15,6 @@ export default function Results() {
       <Nav />
       <main className="max-w-5xl mx-auto px-6 py-12 pt-24">
         
-        {/* Header Section */}
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-bold mb-4 tracking-tight">Analysis Complete</h1>
           {result.vulnerable ? (
@@ -29,7 +28,6 @@ export default function Results() {
           )}
         </div>
 
-        {/* Function Slices */}
         <div className="space-y-6 mb-12">
           <h2 className="text-2xl font-semibold mb-4 border-b border-gray-800 pb-2">Function-Level Breakdown</h2>
           {result.functions.map((fn, idx) => {
@@ -49,7 +47,6 @@ export default function Results() {
                   </div>
                 </div>
 
-                {/* Probability Bar */}
                 <div className="w-full h-2 bg-gray-800 rounded-full mt-4">
                   <div 
                     className={`h-full rounded-full ${isVuln ? 'bg-red-500' : 'bg-emerald-500'}`} 
@@ -57,10 +54,32 @@ export default function Results() {
                   />
                 </div>
 
-                {/* Truncation Warning */}
                 {fn.truncated && (
                   <div className="mt-4 text-xs text-amber-400 bg-amber-400/10 p-2 rounded inline-block">
                     ⚠️ Function exceeds 512 tokens. Model applied head+tail truncation.
+                  </div>
+                )}
+                
+                {fn.line_scores && fn.line_scores.length > 0 && (
+                  <div className="mt-6 pt-4 border-t border-gray-800">
+                    <h4 className="text-sm font-semibold text-gray-400 mb-3 flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                      LIME Analysis (Suspicious Tokens)
+                    </h4>
+                    <div className="space-y-2">
+                      {fn.line_scores.slice(0, 3).map((ls, i) => (
+                        <div key={i} className="flex justify-between items-center bg-black/40 p-3 rounded border border-red-500/10">
+                          <span className="font-mono text-sm text-gray-300">Line {ls.line}</span>
+                          <div className="flex gap-2 flex-wrap justify-end">
+                            {ls.top_tokens.map((t, j) => (
+                              <span key={j} className="text-xs px-2 py-1 rounded bg-red-500/20 text-red-300 font-mono border border-red-500/30">
+                                {t}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>
@@ -68,7 +87,6 @@ export default function Results() {
           })}
         </div>
 
-        {/* Model Metadata Footer */}
         <div className="bg-gray-900 p-6 rounded-xl border border-gray-800 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400">
           <div>
             <span className="font-semibold text-gray-300">AI Engine:</span> {result.model_info.checkpoint}
