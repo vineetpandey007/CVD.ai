@@ -1,331 +1,90 @@
-import { useLocation, Link } from "react-router-dom";
-
-import { CodePanel } from "../components/CodePanel";
-import type { AnalyzeResponse, Finding } from "../types/report";
-
-type ResultsLocationState = {
-  result?: unknown;
-  code?: unknown;
-  language?: unknown;
-} | null;
-
-type StaticSource = Exclude<Finding["source"], "model">;
-
-const STATIC_SOURCES: StaticSource[] = [
-  "bandit",
-  "semgrep",
-  "ruff",
-  "flawfinder",
-  "cppcheck",
-  "njsscan",
-];
-
-const SOURCE_NAMES: Record<StaticSource, string> = {
-  bandit: "Bandit",
-  semgrep: "Semgrep",
-  ruff: "Ruff",
-  flawfinder: "Flawfinder",
-  cppcheck: "Cppcheck",
-  njsscan: "njsscan",
-};
-
-const CWE_NAMES: Record<string, string> = {
-  "CWE-79": "Cross-site scripting (XSS)",
-  "CWE-89": "SQL injection",
-  "CWE-120": "Classic buffer overflow",
-};
-
-const LANGUAGE_EXTENSIONS: Record<string, string> = {
-  python: "py",
-  javascript: "js",
-  java: "java",
-  c: "c",
-  cpp: "cpp",
-};
-
-function isFinding(value: unknown): value is Finding {
-  if (typeof value !== "object" || value === null) return false;
-  const finding = value as Record<string, unknown>;
-  return (
-    (finding.line === null || typeof finding.line === "number") &&
-    (finding.severity === "vulnerable" || finding.severity === "clear") &&
-    typeof finding.label === "string" &&
-    (finding.cwe === null || typeof finding.cwe === "string") &&
-    (finding.confidence === null || typeof finding.confidence === "number") &&
-    (finding.source === "model" ||
-      STATIC_SOURCES.some((source) => source === finding.source))
-  );
-}
-
-function isAnalyzeResponse(value: unknown): value is AnalyzeResponse {
-  if (typeof value !== "object" || value === null) return false;
-  const result = value as Record<string, unknown>;
-  return (
-    typeof result.vulnerable === "boolean" &&
-    typeof result.overall_confidence === "number" &&
-    Array.isArray(result.findings) &&
-    result.findings.every(isFinding) &&
-    typeof result.scan_id === "string" &&
-    Array.isArray(result.analysis_warnings) &&
-    result.analysis_warnings.every((warning) => typeof warning === "string")
-  );
-}
-
-function formatCwe(cwe: string): string {
-  const name = CWE_NAMES[cwe.toUpperCase()];
-  return name ? `${cwe} · ${name}` : cwe;
-}
-
-function FindingCard({
-  finding,
-  informational = false,
-}: {
-  finding: Finding;
-  informational?: boolean;
-}) {
-  return (
-    <li
-      className={`rounded-xl border border-white/10 px-5 py-4 ${
-        informational
-          ? "bg-white/[0.03]"
-          : finding.severity === "vulnerable"
-            ? "bg-signal-red/[0.04]"
-            : "bg-signal-green/[0.04]"
-      }`}
-    >
-      <div className="flex flex-wrap items-center gap-2">
-        <span
-          className={`rounded-full px-3 py-1 font-sans text-xs font-medium uppercase tracking-wider ${
-            informational
-              ? "bg-white/[0.07] text-fog"
-              : finding.severity === "vulnerable"
-                ? "bg-signal-red/15 text-signal-red"
-                : "bg-signal-green/15 text-signal-green"
-          }`}
-        >
-          {informational
-            ? "Informational"
-            : finding.severity === "vulnerable"
-              ? "Vulnerable"
-              : "Clear"}
-        </span>
-        {(!informational || finding.line != null) && (
-          <span className="font-mono text-sm text-fog">
-            {finding.line == null ? "Line unavailable" : `Line ${finding.line}`}
-          </span>
-        )}
-        {finding.cwe && (
-          <span className="font-mono text-sm text-fog">{formatCwe(finding.cwe)}</span>
-        )}
-        {informational && finding.confidence != null && (
-          <span className="font-mono text-sm text-fog">
-            Model score: {(finding.confidence * 100).toFixed(1)}%
-          </span>
-        )}
-      </div>
-      <p className="mt-3 font-sans text-base leading-relaxed text-chalk">
-        {finding.label}
-      </p>
-    </li>
-  );
-}
+import { useLocation, Link, Navigate } from 'react-router-dom';
+import type { AnalyzeResponse } from '../types/report';
+import Nav from '../components/Nav';
 
 export default function Results() {
   const location = useLocation();
-  const state = location.state as ResultsLocationState;
-  const result = isAnalyzeResponse(state?.result) ? state.result : null;
+  const result = location.state?.result as AnalyzeResponse;
 
   if (!result) {
-    return (
-      <main className="relative flex min-h-[92vh] items-center justify-center px-6 pb-24 pt-32 text-chalk">
-        <section className="glass w-full max-w-3xl rounded-2xl px-8 py-10 sm:px-12">
-          <h1 className="font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
-            This scan is no longer available. Run a new analysis.
-          </h1>
-          <Link
-            to="/analyzer"
-            className="mt-6 inline-flex rounded-full bg-brand px-6 py-3 font-sans text-sm font-semibold text-ink transition hover:bg-brand/90"
-          >
-            Run a new analysis
-          </Link>
-        </section>
-      </main>
-    );
+    return <Navigate to="/analyze" replace />;
   }
 
-  const staticFindings = result.findings.filter(
-    (finding) => finding.source !== "model",
-  );
-  const modelFindings = result.findings.filter(
-    (finding) => finding.source === "model",
-  );
-  const groupedFindings = STATIC_SOURCES.map((source) => ({
-    source,
-    findings: staticFindings.filter((finding) => finding.source === source),
-  }));
-  const warnings = result.analysis_warnings;
-  const confidence = Math.round(result.overall_confidence * 100);
-  const code = typeof state?.code === "string" ? state.code : null;
-  const language =
-    typeof state?.language === "string" ? state.language : "source";
-  const codeLines = code?.split("\n").map((line, index) => {
-    const finding = staticFindings.find((item) => item.line === index + 1);
-    return {
-      code: line,
-      ...(finding
-        ? {
-            finding: {
-              severity: finding.severity,
-              label: finding.label,
-              ...(finding.cwe ? { cwe: finding.cwe } : {}),
-            },
-          }
-        : {}),
-    };
-  });
-
   return (
-    <main className="relative min-h-[92vh] px-6 pb-24 pt-32 text-chalk">
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-6">
-        {warnings.length > 0 && (
-          <section
-            role="alert"
-            className="glass rounded-2xl border border-brand/40 bg-brand/[0.08] p-6 sm:p-8"
-          >
-            <h2 className="font-sans text-sm font-semibold uppercase tracking-wider text-brand">
-              Some analysis tools did not finish
-            </h2>
-            <ul className="mt-3 space-y-1 font-sans text-base leading-relaxed text-chalk/90">
-              {warnings.map((warning, index) => (
-                <li key={`${warning}-${index}`}>{warning}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <section
-          className={`glass rounded-2xl border p-6 sm:p-8 ${
-            result.vulnerable
-              ? "border-signal-red/40 bg-signal-red/[0.06]"
-              : warnings.length > 0
-                ? "border-brand/30"
-                : "border-signal-green/30 bg-signal-green/[0.04]"
-          }`}
-        >
-          <p className="font-sans text-xs font-medium uppercase tracking-[0.18em] text-fog">
-            Analysis verdict
-          </p>
-          <h1
-            className={`mt-2 font-serif text-5xl font-semibold tracking-tight sm:text-6xl ${
-              result.vulnerable
-                ? "text-signal-red"
-                : warnings.length > 0
-                  ? "text-chalk"
-                  : "text-signal-green"
-            }`}
-          >
-            {result.vulnerable
-              ? "Vulnerable"
-              : warnings.length > 0
-                ? "No issues found by the tools that completed"
-                : "No issues found"}
-          </h1>
-          <p className="mt-3 font-sans text-lg text-chalk/80">
-            Overall confidence:{" "}
-            <span className="font-medium text-chalk">{confidence}%</span>
-          </p>
-        </section>
-
-        {staticFindings.length === 0 && (
-          <section className="glass rounded-2xl p-6 sm:p-8">
-            <h2 className="font-serif text-2xl font-semibold sm:text-3xl">
-              No static-analysis findings
-            </h2>
-            <p className="mt-2 font-sans text-base leading-relaxed text-fog">
-              No static-analysis findings were returned. Coverage is limited:
-              testing found patterns missed by the available free rules.
-            </p>
-          </section>
-        )}
-
-        {staticFindings.length > 0 && (
-          <section className="glass rounded-2xl p-6 sm:p-8">
-            <div>
-              <h2 className="font-serif text-2xl font-semibold sm:text-3xl">
-                Static-analysis findings
-              </h2>
-              <p className="mt-2 font-sans text-base leading-relaxed text-fog">
-                These findings count toward the verdict.
-              </p>
+    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans">
+      <Nav />
+      <main className="max-w-5xl mx-auto px-6 py-12 pt-24">
+        
+        {/* Header Section */}
+        <div className="mb-10 text-center">
+          <h1 className="text-4xl font-bold mb-4 tracking-tight">Analysis Complete</h1>
+          {result.vulnerable ? (
+            <div className="inline-block px-6 py-3 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-lg font-medium shadow-[0_0_30px_rgba(239,68,68,0.15)]">
+              ⚠️ Vulnerabilities Detected (Max Confidence: {(result.overall_confidence * 100).toFixed(1)}%)
             </div>
-            <div className="mt-6 space-y-6">
-              {groupedFindings.map(
-                ({ source, findings }) =>
-                  findings.length > 0 && (
-                    <section key={source}>
-                      <h3 className="mb-3 font-sans text-xs font-medium uppercase tracking-[0.18em] text-fog">
-                        {SOURCE_NAMES[source]}
-                      </h3>
-                      <ul className="flex flex-col gap-3">
-                        {findings.map((finding, index) => (
-                          <FindingCard
-                            key={`${source}-${finding.line}-${index}`}
-                            finding={finding}
-                          />
-                        ))}
-                      </ul>
-                    </section>
-                  ),
-              )}
+          ) : (
+            <div className="inline-block px-6 py-3 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-lg font-medium shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+              ✅ No Vulnerabilities Detected (Max Confidence: {(result.overall_confidence * 100).toFixed(1)}%)
             </div>
-          </section>
-        )}
+          )}
+        </div>
 
-        {modelFindings.length > 0 && (
-          <section className="glass rounded-2xl border border-white/10 p-6 sm:p-8">
-            <h2 className="font-serif text-2xl font-semibold sm:text-3xl text-chalk">
-              Model signal (informational)
-            </h2>
-            <p className="mt-2 font-sans text-base leading-relaxed text-fog">
-              The model’s score is not used for the verdict and only reflects
-              roughly the first 512 tokens of the input.
-            </p>
-            <ul className="mt-5 flex flex-col gap-3">
-              {modelFindings.map((finding, index) => (
-                <FindingCard
-                  key={`model-${finding.line}-${index}`}
-                  finding={finding}
-                  informational
-                />
-              ))}
-            </ul>
-          </section>
-        )}
+        {/* Function Slices */}
+        <div className="space-y-6 mb-12">
+          <h2 className="text-2xl font-semibold mb-4 border-b border-gray-800 pb-2">Function-Level Breakdown</h2>
+          {result.functions.map((fn, idx) => {
+            const isVuln = fn.probability >= result.model_info.threshold;
+            return (
+              <div key={idx} className={`p-6 rounded-xl border ${isVuln ? 'border-red-500/30 bg-red-500/5' : 'border-gray-800 bg-gray-900'} relative overflow-hidden`}>
+                <div className="flex justify-between items-start mb-4">
+                  <div>
+                    <h3 className="text-xl font-mono font-semibold text-gray-200">{fn.name}()</h3>
+                    <p className="text-sm text-gray-500 mt-1">Lines: {fn.start_line} - {fn.end_line}</p>
+                  </div>
+                  <div className="text-right">
+                    <span className={`text-2xl font-bold ${isVuln ? 'text-red-400' : 'text-emerald-400'}`}>
+                      {(fn.probability * 100).toFixed(1)}%
+                    </span>
+                    <p className="text-xs text-gray-500 uppercase tracking-wide">Vuln Probability</p>
+                  </div>
+                </div>
 
-        {codeLines && (
-          <section>
-            <h2 className="mb-3 font-serif text-2xl font-semibold tracking-tight">
-              Scanned code
-            </h2>
-            <CodePanel
-              lines={codeLines}
-              filename={`input.${LANGUAGE_EXTENSIONS[language] ?? language}`}
-            />
-          </section>
-        )}
+                {/* Probability Bar */}
+                <div className="w-full h-2 bg-gray-800 rounded-full mt-4">
+                  <div 
+                    className={`h-full rounded-full ${isVuln ? 'bg-red-500' : 'bg-emerald-500'}`} 
+                    style={{ width: `${fn.probability * 100}%` }}
+                  />
+                </div>
 
-        <div className="flex flex-wrap items-center justify-between gap-4 border-t border-white/10 pt-6">
-          <p className="font-mono text-sm text-fog">
-            Scan ID: <span className="break-all">{result.scan_id}</span>
-          </p>
-          <Link
-            to="/analyzer"
-            className="rounded-full bg-brand px-7 py-3 font-sans text-base font-medium text-ink transition hover:bg-brand/90"
-          >
-            Scan another
+                {/* Truncation Warning */}
+                {fn.truncated && (
+                  <div className="mt-4 text-xs text-amber-400 bg-amber-400/10 p-2 rounded inline-block">
+                    ⚠️ Function exceeds 512 tokens. Model applied head+tail truncation.
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Model Metadata Footer */}
+        <div className="bg-gray-900 p-6 rounded-xl border border-gray-800 flex flex-col sm:flex-row justify-between items-center text-sm text-gray-400">
+          <div>
+            <span className="font-semibold text-gray-300">AI Engine:</span> {result.model_info.checkpoint}
+          </div>
+          <div>
+            <span className="font-semibold text-gray-300">Decision Threshold:</span> {result.model_info.threshold}
+          </div>
+          <div>
+            <span className="font-semibold text-gray-300">Test F1:</span> {(result.model_info.test_f1 * 100).toFixed(1)}%
+          </div>
+          <Link to="/model" className="text-blue-400 hover:text-blue-300 transition-colors">
+            View Model Card &rarr;
           </Link>
         </div>
-      </div>
-    </main>
+
+      </main>
+    </div>
   );
 }

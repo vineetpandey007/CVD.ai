@@ -1,146 +1,76 @@
-import { useState, type FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { analyzeCode, type Language } from "../api/client";
-
-const SQL_INJECTION_EXAMPLE = `def get_user(connection, username):
-    query = "SELECT * FROM users WHERE name = '" + username + "'"
-    return connection.execute(query).fetchall()`;
-
-const LANGUAGES: Language[] = ["python", "javascript", "java", "c", "cpp"];
-
-function getErrorMessage(error: unknown): string {
-  if (error instanceof TypeError) {
-    return "Could not connect to the backend. Make sure the backend server is running, then try again.";
-  }
-
-  const message = error instanceof Error ? error.message : "";
-  const status = message.match(/\bAPI request failed:\s*(\d{3})/i)?.[1];
-  if (status === "429") {
-    return "Rate limit reached. You can run up to 10 scans per minute; please wait before trying again.";
-  }
-  if (status) {
-    return `The scan request failed (HTTP ${status}). Please try again.`;
-  }
-  return "The scan could not be completed. Please try again.";
-}
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { analyzeCode } from '../api/client';
+import Nav from '../components/Nav';
 
 export default function Analyzer() {
-  const navigate = useNavigate();
-  const [code, setCode] = useState("");
-  const [language, setLanguage] = useState<Language>("python");
+  const [code, setCode] = useState('');
+  const [language, setLanguage] = useState('c');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!code.trim() || loading) return;
-
+  const handleAnalyze = async () => {
+    if (!code.trim()) {
+      setError('Please enter some code to analyze.');
+      return;
+    }
     setLoading(true);
-    setError(null);
+    setError('');
+    
     try {
       const result = await analyzeCode(code, language);
-      navigate(`/results/${encodeURIComponent(result.scan_id)}`, {
-        state: { result },
-      });
-    } catch (scanError) {
-      setError(getErrorMessage(scanError));
+      // Navigate to the results page and pass the AI payload
+      navigate('/results', { state: { result } });
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during analysis. Is the backend running?');
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
-    <main className="relative flex min-h-[92vh] items-center justify-center px-6 pb-24 pt-32 text-chalk">
-      <section className="glass w-full max-w-4xl rounded-2xl px-6 py-8 sm:px-10 sm:py-10">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <p className="font-mono text-xs uppercase tracking-[0.15em] text-fog">
-              Static + neural analysis
-            </p>
-            <h1 className="mt-2 font-serif text-3xl font-semibold tracking-tight sm:text-4xl">
-              Scan your code
-            </h1>
-          </div>
-          <button
-            type="button"
-            onClick={() => {
-              setCode(SQL_INJECTION_EXAMPLE);
-              setLanguage("python");
-              setError(null);
-            }}
-            className="font-sans text-sm text-brand underline decoration-brand/40 underline-offset-4 transition hover:text-chalk"
+    <div className="min-h-screen bg-gray-950 text-gray-100 font-sans">
+      <Nav />
+      <main className="max-w-4xl mx-auto px-6 py-12 pt-24">
+        <h1 className="text-4xl font-bold mb-2 tracking-tight">Code Analyzer</h1>
+        <p className="text-gray-400 mb-8">Paste your C or C++ code below to scan for vulnerabilities using CodeBERT.</p>
+
+        <div className="mb-6 flex items-center gap-4">
+          <label className="text-sm font-medium text-gray-300 uppercase tracking-wide">Language:</label>
+          <select
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+            className="bg-gray-900 border border-gray-800 text-gray-200 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none transition-all"
           >
-            Load example
-          </button>
+            <option value="c">C</option>
+            <option value="cpp">C++</option>
+          </select>
         </div>
 
-        <form className="mt-8" onSubmit={handleSubmit}>
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-            <label
-              htmlFor="code"
-              className="font-mono text-xs uppercase tracking-wider text-fog"
-            >
-              Source code
-            </label>
-            <label className="flex items-center gap-3 font-mono text-xs text-fog">
-              Language
-              <select
-                value={language}
-                onChange={(event) => setLanguage(event.target.value as Language)}
-                className="glass-strong rounded-lg px-3 py-2 font-mono text-xs text-chalk outline-none focus:border-brand"
-              >
-                {LANGUAGES.map((item) => (
-                  <option key={item} value={item} className="bg-paper text-chalk">
-                    {item}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
+        <div className="mb-6">
           <textarea
-            id="code"
             value={code}
-            onChange={(event) => setCode(event.target.value)}
-            placeholder="Paste code here, or load the SQL injection example…"
-            spellCheck={false}
-            aria-describedby="scan-status"
-            className="glass-strong min-h-72 w-full resize-y rounded-xl p-4 font-mono text-sm leading-6 text-chalk placeholder:text-fog/60 outline-none transition focus:border-brand"
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="void test() {&#10;    char buf[10];&#10;    strcpy(buf, 'overflow');&#10;}"
+            className="w-full h-96 bg-gray-900 border border-gray-800 text-gray-200 p-6 font-mono text-sm rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all resize-y"
           />
+        </div>
 
-          {error && (
-            <p role="alert" className="mt-4 font-sans text-sm text-signal-red">
-              {error}
-            </p>
-          )}
-
-          {loading && (
-            <p
-              id="scan-status"
-              role="status"
-              className="mt-4 rounded-xl border border-brand/20 bg-brand/5 px-4 py-3 font-sans text-sm leading-relaxed text-fog"
-            >
-              Scan in progress. Analysis typically takes 40–60 seconds on this
-              setup because local static-analysis rules take time to initialize
-              and inspect your code. You can leave this page open while it runs.
-            </p>
-          )}
-
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-            <p className="font-sans text-xs text-fog">
-              Up to 10,000 lines · Your code is not included in scan history
-            </p>
-            <button
-              type="submit"
-              disabled={loading || !code.trim()}
-              className="rounded-full bg-brand px-7 py-3 font-sans text-sm font-semibold tracking-tight text-ink transition hover:bg-brand/90 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              {loading ? "Scanning…" : "Scan code →"}
-            </button>
+        {error && (
+          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400">
+            {error}
           </div>
-        </form>
-      </section>
-    </main>
+        )}
+
+        <button
+          onClick={handleAnalyze}
+          disabled={loading}
+          className="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 px-8 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors shadow-lg shadow-blue-500/20"
+        >
+          {loading ? 'Analyzing Code...' : 'Analyze Code'}
+        </button>
+      </main>
+    </div>
   );
 }
