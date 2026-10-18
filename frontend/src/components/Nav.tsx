@@ -30,8 +30,9 @@ export default function Nav() {
         <div className="hidden md:flex items-center gap-2">
           <NavLink to="/" label="Platform" />
           <NavLink to="/analyzer" label="Code Analyzer" />
+          <NavLink to="/history" label="Audit History" />
           <NavLink to="/model" label="AI Architecture" />
-          <a href="https://github.com" target="_blank" rel="noreferrer" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">Documentation</a>
+          <a href="https://github.com/vineetpandey007" target="_blank" rel="noreferrer" className="px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-white hover:bg-gray-800/50 transition-all">GitHub Profile</a>
         </div>
       </div>
     </nav>

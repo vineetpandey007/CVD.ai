@@ -6,6 +6,7 @@ import Landing from './pages/Landing';
 import Analyzer from './pages/Analyzer';
 import Results from './pages/Results';
 import ModelCard from './pages/ModelCard';
+import History from './pages/History'; // <-- The missing import!
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="/analyzer" element={<Analyzer />} />
             <Route path="/results" element={<Results />} />
             <Route path="/model" element={<ModelCard />} />
+            <Route path="/history" element={<History />} />
           </Routes>
         </div>
 

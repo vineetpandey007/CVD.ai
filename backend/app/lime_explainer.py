@@ -20,13 +20,14 @@ class CVDExplainer:
                 )
                 inputs = {k: v.to(self.engine.device) for k, v in inputs.items()}
                 logits = self.engine.model(**inputs).logits
+                
                 batch_probs = torch.nn.functional.softmax(logits, dim=-1).cpu().numpy()
                 probs.extend(batch_probs)
                 
         return np.array(probs)
 
     def explain(self, code_snippet, start_line):
-        exp = self.explainer.explain_instance(code_snippet, self._predict_proba, num_features=10, num_samples=50)
+        exp = self.explainer.explain_instance(code_snippet, self._predict_proba, num_features=10, num_samples=15)
         vuln_tokens = {token: weight for token, weight in exp.as_list() if weight > 0}
         
         lines = code_snippet.split('\n')
@@ -44,7 +45,15 @@ class CVDExplainer:
                 line_scores.append({
                     "line": start_line + idx,
                     "score": float(score),
-                    "top_tokens": top_tokens[:4]
+                    "top_tokens": top_tokens[:4],
+                    "code": line.strip()
                 })
-                
+        
+        # Normalize relative weights so the most suspicious line scales to 85%-95%
+        if line_scores:
+            max_s = max(x["score"] for x in line_scores)
+            if max_s > 0:
+                for item in line_scores:
+                    item["score"] = round(min(0.95, (item["score"] / max_s) * 0.85 + 0.10), 3)
+
         return sorted(line_scores, key=lambda x: x["score"], reverse=True)
