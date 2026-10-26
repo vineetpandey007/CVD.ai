@@ -1,48 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
 @import "tailwindcss";
 
-@theme {
-  --color-ink: #0E1116;
-  --color-paper: #161B22;
-  --color-fog: #7C8494;
-  --color-chalk: #ECEFF4;
-  --color-brand: #F2B84B;
-  --color-olive: #556B2F;
-  --color-signal-red: #E5484D;
-  --color-signal-green: #3DD68C;
-
-  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
-  --font-serif: "Fraunces", ui-serif, Georgia, serif;
-}
-
 @layer base {
-  body {
-    @apply bg-ink text-chalk font-sans antialiased;
-  }
-  ::selection {
-    @apply bg-brand/30 text-chalk;
-  }
-}
-
-@layer components {
-  .glass {
-    @apply border border-white/10 bg-ink/70 backdrop-blur-xl;
-  }
-  .glass-strong {
-    @apply border border-white/15 bg-ink/85 backdrop-blur-2xl;
-  }
-  .ambient-mask {
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 70%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 12%, black 70%, transparent 100%);
+  :root {
+    /* Permanent Dark Theme: Bold Typography */
+    --background: #0A0A0A;
+    --foreground: #FAFAFA;
+    --muted: #1A1A1A;
+    --muted-foreground: #737373;
+    --accent: #FF3D00;
+    --accent-secondary: #FF3D00;
+    --border: #262626;
+    --card: #0F0F0F;
+    --radius: 0px;
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }

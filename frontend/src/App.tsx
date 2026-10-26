@@ -12,7 +12,7 @@ function App() {
   return (
     <BrowserRouter>
       {/* Removed the solid bg-gray-950 so the WebGL particles are visible! */}
-      <div className="relative min-h-screen flex flex-col text-gray-900 dark:text-gray-100 transition-colors duration-300">
+     <div className="relative min-h-screen flex flex-col transition-colors duration-300">
         
         {/* The 3D Background */}
         <Scene />

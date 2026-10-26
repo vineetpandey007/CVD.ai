@@ -1,17 +1,29 @@
-# Python & ML
-ml/.venv/
-ml/checkpoints/
+# Environment & Secrets (CRITICAL)
+.env
+backend/.env
+*.env
+
+# Python & Virtual Environments
 __pycache__/
 *.py[cod]
-*.pth
-*.bin
-.env
+venv/
+.venv/
+env/
+.pytest_cache/
+.ruff_cache/
 
-# Node
+# Node / Frontend
 node_modules/
 frontend/node_modules/
 frontend/dist/
 
-# ZIPs & OS
+# Local Databases & Heavy ML Archives (>100MB breaks GitHub push)
+chroma_db/
+backend/chroma_db/
 *.zip
-.DS_Store
+*.pt
+*.bin
+*.safetensorsml/checkpoints/
+
+
+ml/checkpoints/

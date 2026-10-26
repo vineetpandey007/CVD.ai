@@ -5,6 +5,7 @@ import os
 import zipfile
 import io
 import re
+import hashlib
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
@@ -35,6 +36,32 @@ def get_comparison_data():
             return json.load(f)
     return {}
 
+def store_function_vector(request: Request, name: str, code: str, probability: float, threshold: float):
+    """Helper function to store function embeddings into ChromaDB."""
+    try:
+        if not hasattr(request.app.state, "vector_collection") or not request.app.state.vector_collection:
+            return
+        
+        # Extract 768-dim CodeBERT vector
+        embedding = request.app.state.cvd_model.get_embedding(code)
+        
+        # Generate a deterministic unique ID based on function name and code hash
+        func_hash = hashlib.sha256(code.encode('utf-8')).hexdigest()[:12]
+        doc_id = f"{name}_{func_hash}"
+
+        request.app.state.vector_collection.upsert(
+            ids=[doc_id],
+            embeddings=[embedding],
+            documents=[code],
+            metadatas=[{
+                "function_name": name,
+                "probability": float(probability),
+                "is_vulnerable": bool(probability >= threshold)
+            }]
+        )
+    except Exception as e:
+        print(f"Warning: ChromaDB vector upsert failed for {name}: {e}")
+
 @router.post("/analyze", response_model=AnalyzeResponse)
 async def analyze_code(request: Request, payload: AnalyzeRequest):
     if not request.app.state.model_loaded or not request.app.state.cvd_model:
@@ -54,10 +81,10 @@ async def analyze_code(request: Request, payload: AnalyzeRequest):
         prob = res["probability"]
         max_prob = max(max_prob, prob)
         line_scores = []
+        fn_code = "\n".join(code_lines[res["start_line"]-1 : res["end_line"]])
         
         if prob >= model.threshold:
             is_vulnerable = True
-            fn_code = "\n".join(code_lines[res["start_line"]-1 : res["end_line"]])
             line_scores = await run_in_threadpool(explainer.explain, fn_code, res["start_line"])
             
         functions.append(FunctionResult(
@@ -68,6 +95,17 @@ async def analyze_code(request: Request, payload: AnalyzeRequest):
             truncated=res["truncated"],
             line_scores=line_scores
         ))
+
+        # Store in ChromaDB vector repository
+        if fn_code.strip():
+            await run_in_threadpool(
+                store_function_vector,
+                request,
+                res["name"],
+                fn_code,
+                prob,
+                model.threshold
+            )
 
     comp_data = get_comparison_data()
     test_f1 = next((row.get("f1", 0.0) for row in comp_data.get("comparison", []) if row.get("model") == "Fine-tuned CodeBERT"), 0.0)
@@ -124,10 +162,10 @@ async def analyze_bulk(request: Request, file: UploadFile = File(...)):
                     prob = res["probability"]
                     max_prob = max(max_prob, prob)
                     line_scores = []
+                    fn_code = "\n".join(code_lines[res["start_line"]-1 : res["end_line"]])
                     
                     if prob >= model.threshold:
                         is_vulnerable = True
-                        fn_code = "\n".join(code_lines[res["start_line"]-1 : res["end_line"]])
                         if len(all_functions) < 15: 
                             line_scores = await run_in_threadpool(explainer.explain, fn_code, res["start_line"])
                         
@@ -140,6 +178,17 @@ async def analyze_bulk(request: Request, file: UploadFile = File(...)):
                         truncated=res["truncated"],
                         line_scores=line_scores
                     ))
+
+                    # Store in ChromaDB vector repository
+                    if fn_code.strip():
+                        await run_in_threadpool(
+                            store_function_vector,
+                            request,
+                            display_name,
+                            fn_code,
+                            prob,
+                            model.threshold
+                        )
 
     except zipfile.BadZipFile:
         raise HTTPException(status_code=400, detail="Invalid or corrupted ZIP file.")

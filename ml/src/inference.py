@@ -47,7 +47,14 @@ class CVDInference:
                     
                     # Reverted to [0][1] (Class 1 is Vulnerable)
                     prob = float(torch.softmax(outputs.logits, dim=1)[0][1].item())
-                
+                    
+                    # --- HYBRID HEURISTIC POST-PROCESSING ---
+                    # Reduce false positives for known safe bounding functions/types
+                    if "snprintf" in f["code"] and "strcpy" not in f["code"] and "strcat" not in f["code"]:
+                        prob = prob * 0.1  # Slash the probability by 90%
+                    if "std::string" in f["code"] or "std::vector" in f["code"]:
+                        prob = prob * 0.2  # Modern C++ containers handle memory safely
+
                 results.append({
                     "name": f["name"],
                     "start_line": f["start_line"],
@@ -58,3 +65,29 @@ class CVDInference:
                 })
                 
         return results
+
+    def get_embedding(self, source_code: str) -> list[float]:
+        """
+        Extracts the 768-dimensional [CLS] token embedding from CodeBERT 
+        to use for semantic vector search in ChromaDB.
+        """
+        # Tokenize the input code
+        inputs = self.tokenizer(
+            source_code, 
+            return_tensors="pt", 
+            truncation=True, 
+            max_length=512, 
+            padding="max_length"
+        )
+        inputs = {k: v.to(self.device) for k, v in inputs.items()}
+        
+        # Pass through CodeBERT without computing gradients
+        with torch.no_grad():
+            # Ensure output_hidden_states is True to access the raw embeddings
+            outputs = self.model(**inputs, output_hidden_states=True)
+            
+        # Extract the [CLS] token embedding from the last hidden state
+        # Shape: (batch_size, sequence_length, hidden_size). [CLS] is at index 0.
+        cls_embedding = outputs.hidden_states[-1][0, 0, :].cpu().numpy().tolist()
+        
+        return cls_embedding
