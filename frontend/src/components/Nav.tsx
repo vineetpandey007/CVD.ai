@@ -46,7 +46,7 @@ export default function Nav() {
         {/* 3. Right: External Actions */}
         <div className="flex-shrink-0 flex items-center justify-end w-[200px]">
           <a 
-            href="https://github.com/VineetPandey" 
+            href="https://github.com/vineetpandey007" 
             target="_blank" 
             rel="noreferrer" 
             className="group flex items-center gap-2 px-4 py-2 text-xs font-bold uppercase tracking-widest text-[var(--foreground)] border border-[var(--border)] hover:border-[var(--accent)] transition-all bg-[var(--card)]"

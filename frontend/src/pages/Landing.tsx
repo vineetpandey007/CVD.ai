@@ -4,43 +4,13 @@ export default function Landing() {
   return (
     <div className="w-full flex flex-col items-center justify-center pt-32 pb-24 px-6 sm:px-12 relative z-10">
       
-      {/* Flowchart Animations (Injected safely) */}
-      <style>{`
-        @keyframes flow-x {
-          0% { transform: translateX(-100%); opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { transform: translateX(300%); opacity: 0; }
-        }
-        @keyframes flow-y {
-          0% { transform: translateY(-100%); opacity: 0; }
-          20% { opacity: 1; }
-          80% { opacity: 1; }
-          100% { transform: translateY(300%); opacity: 0; }
-        }
-        .animate-flow-x {
-          animation: flow-x 2s linear infinite;
-        }
-        .animate-flow-x-delayed {
-          animation: flow-x 2s linear infinite;
-          animation-delay: 1s;
-        }
-        .animate-flow-y {
-          animation: flow-y 2s linear infinite;
-        }
-        .animate-flow-y-delayed {
-          animation: flow-y 2s linear infinite;
-          animation-delay: 1s;
-        }
-      `}</style>
-
       {/* 1. Hero Section */}
       <div className="max-w-5xl w-full text-center space-y-8 mt-12 animate-in fade-in slide-in-from-bottom-8 duration-700">
         
         <div className="inline-flex items-center gap-3 rounded-full border border-[var(--border)] bg-[var(--muted)] px-5 py-2 mb-4">
           <span className="h-2 w-2 rounded-full bg-[var(--accent)] animate-pulse shadow-[0_0_8px_var(--accent)]" />
           <span className="font-mono text-xs uppercase tracking-[0.15em] text-[var(--foreground)] font-bold">
-            CVD.ai Core Engine
+            CVD.ai Core Engine v2.4 • CodeBERT + Groq LLM + ChromaDB
           </span>
         </div>
 
@@ -53,13 +23,13 @@ export default function Landing() {
         </h1>
         
         <p className="max-w-2xl mx-auto text-lg md:text-xl text-[var(--muted-foreground)] leading-relaxed pt-4">
-          CVD.ai leverages a custom-trained CodeBERT transformer model to intelligently identify Buffer Overflows, Memory Leaks, and Logic Flaws in raw C/C++ syntax with state-of-the-art token-level explainability.
+          CVD.ai unifies fine-tuned CodeBERT transformers, LIME token explainability, ChromaDB semantic vector search, and high-speed Groq LLM threat reporting to secure C/C++ codebases in real-time.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8">
           <Link 
             to="/analyzer" 
-            className="group relative inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-bold text-[var(--background)] bg-[var(--accent)] transition-all hover:-translate-y-1 shadow-md hover:shadow-lg"
+            className="group relative inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-bold text-[var(--background)] bg-[var(--accent)] transition-all hover:-translate-y-1 shadow-md hover:shadow-lg cursor-pointer"
           >
             <span className="mr-2">Run Neural Scan</span>
             <span className="group-hover:translate-x-1 transition-transform">→</span>
@@ -67,92 +37,120 @@ export default function Landing() {
           
           <Link 
             to="/model" 
-            className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-bold text-[var(--foreground)] bg-transparent border-2 border-[var(--border)] hover:border-[var(--accent)] transition-all"
+            className="inline-flex items-center justify-center w-full sm:w-auto px-8 py-4 font-bold text-[var(--foreground)] bg-transparent border-2 border-[var(--border)] hover:border-[var(--accent)] transition-all cursor-pointer"
           >
             Read AI Model Card
           </Link>
         </div>
       </div>
 
-      {/* 2. Architecture Animated Flowchart Section */}
-      <div className="max-w-7xl w-full mt-40">
+      {/* 2. End-to-End Pipeline Architecture (Classy 2x2 Grid) */}
+      <div className="max-w-6xl w-full mt-40">
         
         <div className="flex flex-col items-center mb-16 text-center">
-          <span className="text-[var(--accent)] font-mono text-sm font-bold tracking-[0.2em] uppercase mb-4">Pipeline Architecture</span>
-          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">Data Processing Flow</h2>
+          <span className="text-[var(--accent)] font-mono text-sm font-bold tracking-[0.2em] uppercase mb-4">Neural Architecture</span>
+          <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-[var(--foreground)]">End-to-End Processing Flow</h2>
         </div>
 
-        {/* The Flowchart Container */}
-        <div className="flex flex-col lg:flex-row items-center lg:items-stretch w-full relative z-10">
+        {/* 2x2 Clean Structured Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
           
-          {/* Node 1: AST Parsing */}
-          <div className="w-full lg:w-[30%] bg-[var(--card)] border border-[var(--border)] p-8 transition-colors duration-300 hover:border-[var(--accent)] relative flex flex-col group shadow-2xl">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-[var(--border)] text-xs font-mono font-bold text-[var(--muted-foreground)] group-hover:bg-[var(--accent)] group-hover:text-[var(--background)] transition-colors">
-              NODE_01
+          {/* Node 1: CodeBERT Classification */}
+          <div className="bg-[var(--card)] border border-[var(--border)] p-8 transition-all duration-300 hover:border-[var(--accent)] hover:-translate-y-1 relative flex flex-col group shadow-2xl">
+            <div className="flex items-center justify-between mb-6 border-b border-[var(--border)] pb-4">
+              <div className="w-12 h-12 bg-[var(--muted)] flex items-center justify-center font-mono text-lg font-bold text-[var(--accent)] border border-[var(--border)] group-hover:border-[var(--accent)] transition-colors">
+                ⟨/⟩
+              </div>
+              <span className="px-3 py-1 bg-[var(--muted)] text-xs font-mono font-bold text-[var(--accent)] border border-[var(--border)]">
+                STAGE 01 // CODEBERT
+              </span>
             </div>
-            <div className="w-12 h-12 bg-[var(--muted)] flex items-center justify-center text-xl mb-6 border border-[var(--border)] group-hover:border-[var(--accent)] transition-colors">
-              ⚙️
-            </div>
-            <h3 className="text-2xl font-bold mb-4 text-[var(--foreground)] tracking-tight">AST Parsing</h3>
-            <p className="text-[var(--muted-foreground)] leading-relaxed text-sm">
-              Raw source code is surgically dismantled into a structural syntax tree. By isolating discrete functional logic, the engine establishes a foundation for absolute analytical precision.
+            <h3 className="text-2xl font-bold mb-3 text-[var(--foreground)] tracking-tight">Transformer Inference</h3>
+            <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+              Fine-tuned transformer model surgically analyzes raw C/C++ token streams to detect buffer overflows, stack corruption, and logic flaws with high precision.
             </p>
           </div>
 
-          {/* Connector 1 -> 2 */}
-          <div className="flex justify-center items-center h-16 lg:h-auto lg:flex-1 w-full relative">
-            {/* Mobile Vertical Flow */}
-            <div className="h-full w-[2px] bg-[var(--border)] lg:hidden relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-[40%] bg-[var(--accent)] animate-flow-y shadow-[0_0_10px_var(--accent)]"></div>
+          {/* Node 2: LIME Explainability */}
+          <div className="bg-[var(--card)] border border-[var(--border)] p-8 transition-all duration-300 hover:border-[var(--accent)] hover:-translate-y-1 relative flex flex-col group shadow-2xl">
+            <div className="flex items-center justify-between mb-6 border-b border-[var(--border)] pb-4">
+              <div className="w-12 h-12 bg-[var(--muted)] flex items-center justify-center font-mono text-xl font-bold text-[var(--accent)] border border-[var(--border)] group-hover:border-[var(--accent)] transition-colors">
+                ◎
+              </div>
+              <span className="px-3 py-1 bg-[var(--muted)] text-xs font-mono font-bold text-[var(--accent)] border border-[var(--border)]">
+                STAGE 02 // LIME AI
+              </span>
             </div>
-            {/* Desktop Horizontal Flow */}
-            <div className="w-full h-[2px] bg-[var(--border)] hidden lg:block relative overflow-hidden">
-              <div className="absolute top-0 left-0 h-full w-[40%] bg-[var(--accent)] animate-flow-x shadow-[0_0_10px_var(--accent)]"></div>
-            </div>
-          </div>
-
-          {/* Node 2: CodeBERT Inference */}
-          <div className="w-full lg:w-[30%] bg-[var(--card)] border border-[var(--border)] p-8 transition-colors duration-300 hover:border-[var(--accent)] relative flex flex-col group shadow-2xl">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-[var(--border)] text-xs font-mono font-bold text-[var(--muted-foreground)] group-hover:bg-[var(--accent)] group-hover:text-[var(--background)] transition-colors">
-              NODE_02
-            </div>
-            <div className="w-12 h-12 bg-[var(--muted)] flex items-center justify-center text-xl mb-6 border border-[var(--border)] group-hover:border-[var(--accent)] transition-colors">
-              🧠
-            </div>
-            <h3 className="text-2xl font-bold mb-4 text-[var(--foreground)] tracking-tight">CodeBERT Inference</h3>
-            <p className="text-[var(--muted-foreground)] leading-relaxed text-sm">
-              Neural transformers evaluate tokenized streams of logic in real-time. Leveraging deep learning, the architecture natively surfaces latent memory corruption and systemic vulnerabilities.
+            <h3 className="text-2xl font-bold mb-3 text-[var(--foreground)] tracking-tight">Token-Level Explainability</h3>
+            <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+              Isolates exact suspicious syntax tokens and variable assignments, mapping probabilistic neural risk back to human-readable source code lines.
             </p>
           </div>
 
-          {/* Connector 2 -> 3 */}
-          <div className="flex justify-center items-center h-16 lg:h-auto lg:flex-1 w-full relative">
-            {/* Mobile Vertical Flow */}
-            <div className="h-full w-[2px] bg-[var(--border)] lg:hidden relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-[40%] bg-[var(--accent)] animate-flow-y-delayed shadow-[0_0_10px_var(--accent)]"></div>
+          {/* Node 3: ChromaDB Vector Search */}
+          <div className="bg-[var(--card)] border border-[var(--border)] p-8 transition-all duration-300 hover:border-[var(--accent)] hover:-translate-y-1 relative flex flex-col group shadow-2xl">
+            <div className="flex items-center justify-between mb-6 border-b border-[var(--border)] pb-4">
+              <div className="w-12 h-12 bg-[var(--muted)] flex items-center justify-center font-mono text-xl font-bold text-[var(--accent)] border border-[var(--border)] group-hover:border-[var(--accent)] transition-colors">
+                ⌖
+              </div>
+              <span className="px-3 py-1 bg-[var(--muted)] text-xs font-mono font-bold text-[var(--accent)] border border-[var(--border)]">
+                STAGE 03 // CHROMADB
+              </span>
             </div>
-            {/* Desktop Horizontal Flow */}
-            <div className="w-full h-[2px] bg-[var(--border)] hidden lg:block relative overflow-hidden">
-              <div className="absolute top-0 left-0 h-full w-[40%] bg-[var(--accent)] animate-flow-x-delayed shadow-[0_0_10px_var(--accent)]"></div>
-            </div>
+            <h3 className="text-2xl font-bold mb-3 text-[var(--foreground)] tracking-tight">Semantic Vector Search</h3>
+            <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+              Generates 768-dimensional mathematical vector embeddings to query persistent historical databases for structurally similar vulnerabilities.
+            </p>
           </div>
 
-          {/* Node 3: LIME Explainer */}
-          <div className="w-full lg:w-[30%] bg-[var(--card)] border border-[var(--border)] p-8 transition-colors duration-300 hover:border-[var(--accent)] relative flex flex-col group shadow-2xl">
-            <div className="absolute top-0 right-0 px-3 py-1 bg-[var(--border)] text-xs font-mono font-bold text-[var(--muted-foreground)] group-hover:bg-[var(--accent)] group-hover:text-[var(--background)] transition-colors">
-              NODE_03
+          {/* Node 4: Groq NLG Reports */}
+          <div className="bg-[var(--card)] border border-[var(--border)] p-8 transition-all duration-300 hover:border-[var(--accent)] hover:-translate-y-1 relative flex flex-col group shadow-2xl">
+            <div className="flex items-center justify-between mb-6 border-b border-[var(--border)] pb-4">
+              <div className="w-12 h-12 bg-[var(--muted)] flex items-center justify-center font-mono text-xl font-bold text-[var(--accent)] border border-[var(--border)] group-hover:border-[var(--accent)] transition-colors">
+                ⚙
+              </div>
+              <span className="px-3 py-1 bg-[var(--muted)] text-xs font-mono font-bold text-[var(--accent)] border border-[var(--border)]">
+                STAGE 04 // GROQ LLM
+              </span>
             </div>
-            <div className="w-12 h-12 bg-[var(--muted)] flex items-center justify-center text-xl mb-6 border border-[var(--border)] group-hover:border-[var(--accent)] transition-colors">
-              🔍
-            </div>
-            <h3 className="text-2xl font-bold mb-4 text-[var(--foreground)] tracking-tight">LIME Explainer</h3>
-            <p className="text-[var(--muted-foreground)] leading-relaxed text-sm">
-              Opaque neural predictions are mathematically deconstructed. Probabilistic risk is mapped directly back to specific lines of code, transforming AI inference into actionable human insight.
+            <h3 className="text-2xl font-bold mb-3 text-[var(--foreground)] tracking-tight">Executive Threat Reports</h3>
+            <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+              Synthesizes structured executive threat reports and production-ready C/C++ patched code implementations instantly via ultra-fast Groq inference.
             </p>
           </div>
 
         </div>
       </div>
+
+      {/* 3. Feature Highlights Section */}
+      <div className="max-w-7xl w-full mt-32 grid grid-cols-1 md:grid-cols-3 gap-8">
+        
+        <div className="bg-[var(--card)] border border-[var(--border)] p-8">
+          <span className="font-mono text-xs text-[var(--accent)] uppercase tracking-widest block mb-2">[01 SECURITY]</span>
+          <h4 className="text-xl font-bold text-[var(--foreground)] mb-3">Buffer Overflow Defense</h4>
+          <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+            Instantly flags dangerous functions like `strcpy`, `sprintf`, and unvalidated stack allocations before deployment.
+          </p>
+        </div>
+
+        <div className="bg-[var(--card)] border border-[var(--border)] p-8">
+          <span className="font-mono text-xs text-[var(--accent)] uppercase tracking-widest block mb-2">[02 EXPORT]</span>
+          <h4 className="text-xl font-bold text-[var(--foreground)] mb-3">Executive PDF Reports</h4>
+          <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+            Compile complete vulnerability assessments, LIME syntax tokens, and AI patches into downloadable security reports.
+          </p>
+        </div>
+
+        <div className="bg-[var(--card)] border border-[var(--border)] p-8">
+          <span className="font-mono text-xs text-[var(--accent)] uppercase tracking-widest block mb-2">[03 SPEED]</span>
+          <h4 className="text-xl font-bold text-[var(--foreground)] mb-3">Sub-Second Groq Inference</h4>
+          <p className="text-[var(--muted-foreground)] text-sm leading-relaxed">
+            Leverage ultra-fast developer models (`openai/gpt-oss-20b`) with automated fallback handling for zero-latency audits.
+          </p>
+        </div>
+
+      </div>
+
     </div>
   );
 }

@@ -78,20 +78,21 @@ def generate_threat_report(req: ReportRequest):
 
     if not groq_api_key or not groq_api_key.startswith("gsk_"):
         raise HTTPException(
-            status_code=500, 
+            status_code=500,
             detail="Valid GROQ_API_KEY (starting with 'gsk_') not found in backend/.env file."
         )
 
     system_prompt = (
         "You are a Security Assistant reviewing a flagged C/C++ function. "
-        "Do NOT write in paragraphs. You must output the entire report using ONLY concise bullet points under these three bold headers:\n\n"
-        "**1. The Issue:**\n"
-        "- Explain the specific syntax flaw in one or two bullet points.\n\n"
-        "**2. The Danger:**\n"
-        "- Explain the security risk (e.g., what a hacker could do) in one or two bullet points.\n\n"
-        "**3. The Fix:**\n"
+        "Do NOT write in paragraphs and do NOT use Markdown symbols like **, *, `, or ```cpp. "
+        "Output plain text ONLY under these exact three headers:\n\n"
+        "1. THE ISSUE:\n"
+        "- Explain the specific syntax flaw in one or two concise bullet points.\n\n"
+        "2. THE DANGER:\n"
+        "- Explain the security risk in one or two concise bullet points.\n\n"
+        "3. THE FIX:\n"
         "- State the solution in one bullet point.\n"
-        "- Provide the patched C/C++ code block below it."
+        "- Provide the patched C/C++ code directly below it without code fences."
     )
 
     user_prompt = (
@@ -112,7 +113,10 @@ def generate_threat_report(req: ReportRequest):
         "groq/compound-mini"
     ]
 
+    # Split domain string so clipboard never converts it into a Markdown bracket link
+    groq_endpoint = "https://api." + "groq" + ".com/openai/v1/chat/completions"
     last_error = ""
+
     for model_name in candidate_models:
         payload = {
             "model": model_name,
@@ -126,7 +130,7 @@ def generate_threat_report(req: ReportRequest):
 
         try:
             response = requests.post(
-                "https://api.groq.com/openai/v1/chat/completions",
+                groq_endpoint,
                 headers=headers,
                 json=payload,
                 timeout=20
@@ -136,7 +140,15 @@ def generate_threat_report(req: ReportRequest):
                 print(f"\n--- GROQ API SUCCESS ({model_name}) ---\n")
                 report_text = result["choices"][0]["message"]["content"]
                 if report_text:
-                    return {"report": report_text}
+                    clean_report = (
+                        report_text.replace("```cpp", "")
+                        .replace("```c", "")
+                        .replace("```", "")
+                        .replace("**", "")
+                        .replace("`", "'")
+                        .strip()
+                    )
+                    return {"report": clean_report}
             else:
                 last_error = response.text
                 print(f"Model {model_name} failed ({response.status_code}): {last_error}")
@@ -153,17 +165,17 @@ class SemanticSearchRequest(BaseModel):
 def semantic_search(req: SemanticSearchRequest):
     if not app.state.model_loaded:
         raise HTTPException(status_code=503, detail="Model is still loading.")
-        
+
     try:
         # Generate the 768-dimensional mathematical vector for the pasted code
         query_embedding = app.state.cvd_model.get_embedding(req.source_code)
-        
+
         # Search ChromaDB for the top 3 most structurally similar functions
         results = app.state.vector_collection.query(
             query_embeddings=[query_embedding],
             n_results=3
         )
-        
+
         # Format the response
         similar_matches = []
         if results and results["documents"] and results["documents"][0]:
@@ -174,7 +186,7 @@ def semantic_search(req: SemanticSearchRequest):
                     "metadata": results["metadatas"][0][i] if results["metadatas"] else {},
                     "distance": results["distances"][0][i] if results["distances"] else 0
                 })
-                
+
         return {"status": "success", "matches": similar_matches}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Semantic Search Error: {str(e)}")
