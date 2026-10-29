@@ -13,4 +13,4 @@ Currently, only the latest version of CVD.ai is supported with security updates.
 
 We take the security of CVD.ai seriously. If you discover a security vulnerability within this project, please DO NOT open a public issue. 
 
-Instead, please send an email to [Your Email Here] or use GitHub's private vulnerability reporting feature. All security vulnerabilities will be promptly addressed.
+Instead, please use GitHub's private vulnerability reporting feature. All security vulnerabilities will be promptly addressed.
