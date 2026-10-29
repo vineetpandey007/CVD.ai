@@ -23,7 +23,6 @@ backend/chroma_db/
 *.zip
 *.pt
 *.bin
-*.safetensorsml/checkpoints/
-
+*.safetensors
 
 ml/checkpoints/
